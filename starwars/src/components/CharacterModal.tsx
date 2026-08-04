@@ -102,7 +102,7 @@ export const CharacterModal: React.FC<CharacterModalProps> = ({
                 {speciesName}
               </span>
               <span className="inline-flex items-center px-3 py-1 rounded-xl text-xs font-mono font-medium bg-slate-950/80 text-slate-300 border border-slate-800 backdrop-blur-md">
-                {`BBY: ${person.birth_year}`}
+                {`Birth Year: ${person.birth_year}`}
               </span>
             </div>
             <p className="text-xs font-mono text-slate-400">
