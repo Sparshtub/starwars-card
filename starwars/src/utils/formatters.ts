@@ -1,3 +1,5 @@
+import { getCuratedCharacterImageUrl } from '../services/characterImages';
+
 /**
  * Formats height from centimeters to meters with 2 decimal places.
  * Example: "172" -> "1.72 m", "unknown" -> "Unknown"
@@ -83,11 +85,8 @@ export function getPicsumImageUrl(characterName: string, id: string, refreshKey:
 }
 
 /**
- * Combined character portrait image resolver.
+ * Combined character portrait image resolver returning authentic curated character images.
  */
 export function getCharacterImageUrl(characterName: string, id: string): string {
-  if (id && !isNaN(parseInt(id, 10))) {
-    return getStarWarsVisualGuideUrl(id);
-  }
-  return getPicsumImageUrl(characterName, id);
+  return getCuratedCharacterImageUrl(characterName, id);
 }

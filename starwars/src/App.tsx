@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { usePeople } from './hooks/usePeople';
 import type { Person } from './types/starwars';
 import { extractIdFromUrl } from './utils/formatters';
+import { loadAkababImagesMap } from './services/characterImages';
 import { Header } from './components/Header';
 import { SearchAndFilter } from './components/SearchAndFilter';
 import { CharacterCard } from './components/CharacterCard';
@@ -18,6 +19,11 @@ export default function App() {
   const [selectedSpecies, setSelectedSpecies] = useState<string>('');
   const [selectedFilm, setSelectedFilm] = useState<string>('');
   const [selectedPerson, setSelectedPerson] = useState<Person | null>(null);
+
+  // Pre-load dynamic character image map on mount
+  useEffect(() => {
+    loadAkababImagesMap().catch((err) => console.warn('Character image map init:', err));
+  }, []);
 
   const {
     people,
@@ -177,7 +183,7 @@ export default function App() {
           <div className="flex items-center space-x-4">
             <span className="hover:text-amber-400 transition-colors cursor-pointer">SWAPI API v1</span>
             <span>•</span>
-            <span className="hover:text-amber-400 transition-colors cursor-pointer">Picsum Seeded Portraits</span>
+            <span className="hover:text-amber-400 transition-colors cursor-pointer">Wookieepedia Character Portraits</span>
           </div>
         </div>
       </footer>
