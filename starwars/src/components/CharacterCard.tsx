@@ -1,39 +1,50 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import type { Person } from '../types/starwars';
-import { extractIdFromUrl, getCharacterImageUrl, getAkababFallbackUrl, getPicsumImageUrl, formatHeight, formatMass } from '../utils/formatters';
+import type { ImageMode } from '../services/characterImages';
+import { extractIdFromUrl, getCharacterImageUrl, getPicsumImageUrl, formatHeight, formatMass } from '../utils/formatters';
 import { getSpeciesTheme } from '../utils/speciesColors';
 import { ExternalLink, Film, Ruler, Weight, RefreshCw } from 'lucide-react';
 
 interface CharacterCardProps {
   person: Person;
   speciesName?: string;
+  imageMode?: ImageMode;
+  globalRefreshKey?: number;
   onClick: () => void;
 }
 
-export const CharacterCard: React.FC<CharacterCardProps> = ({ person, speciesName = 'Human', onClick }) => {
+export const CharacterCard: React.FC<CharacterCardProps> = ({
+  person,
+  speciesName = 'Human',
+  imageMode = 'picsum',
+  globalRefreshKey = 0,
+  onClick,
+}) => {
   const id = extractIdFromUrl(person.url);
-  const [refreshKey, setRefreshKey] = useState<number>(0);
-  const [fallbackStage, setFallbackStage] = useState<number>(0); // 0: Primary, 1: Akabab, 2: Picsum
-  const [imageSrc, setImageSrc] = useState<string>(() => getCharacterImageUrl(person.name, id));
+  const [localRefreshKey, setLocalRefreshKey] = useState<number>(0);
+
+  const [imageSrc, setImageSrc] = useState<string>(() =>
+    getCharacterImageUrl(person.name, id, imageMode, globalRefreshKey)
+  );
+
+  useEffect(() => {
+    setImageSrc(getCharacterImageUrl(person.name, id, imageMode, globalRefreshKey + localRefreshKey));
+  }, [person.name, id, imageMode, globalRefreshKey, localRefreshKey]);
 
   const theme = getSpeciesTheme(speciesName);
 
   const handleImageError = () => {
-    if (fallbackStage === 0) {
-      setFallbackStage(1);
-      setImageSrc(getAkababFallbackUrl(person.name));
-    } else if (fallbackStage === 1) {
-      setFallbackStage(2);
-      setImageSrc(getPicsumImageUrl(person.name, id, refreshKey));
+    const fallbackUrl = getPicsumImageUrl(person.name, id, globalRefreshKey + localRefreshKey);
+    if (imageSrc !== fallbackUrl) {
+      setImageSrc(fallbackUrl);
     }
   };
 
   const handleRefreshPicture = (e: React.MouseEvent) => {
     e.stopPropagation();
-    const nextKey = refreshKey + 1;
-    setRefreshKey(nextKey);
-    setFallbackStage(2);
-    setImageSrc(getPicsumImageUrl(person.name, id, nextKey));
+    const nextKey = localRefreshKey + 1;
+    setLocalRefreshKey(nextKey);
+    setImageSrc(getPicsumImageUrl(person.name, id, globalRefreshKey + nextKey));
   };
 
   return (
@@ -76,7 +87,7 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({ person, speciesNam
         <div className="absolute top-3 right-3 flex items-center space-x-1.5 z-10">
           <button
             onClick={handleRefreshPicture}
-            title="Refresh character portrait"
+            title="Refresh random picture for this character"
             className="p-1 rounded-lg bg-slate-950/80 hover:bg-slate-900 text-slate-400 hover:text-amber-400 border border-slate-800 backdrop-blur-md shadow-md transition-colors opacity-0 group-hover:opacity-100"
           >
             <RefreshCw className="w-3.5 h-3.5" />

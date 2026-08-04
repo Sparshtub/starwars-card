@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { usePeople } from './hooks/usePeople';
 import type { Person } from './types/starwars';
+import type { ImageMode } from './services/characterImages';
 import { extractIdFromUrl } from './utils/formatters';
 import { Header } from './components/Header';
 import { SearchAndFilter } from './components/SearchAndFilter';
@@ -18,6 +19,10 @@ export default function App() {
   const [selectedSpecies, setSelectedSpecies] = useState<string>('');
   const [selectedFilm, setSelectedFilm] = useState<string>('');
   const [selectedPerson, setSelectedPerson] = useState<Person | null>(null);
+
+  // Image mode state ('picsum' for random pictures as requested in prompt hint, 'official' for Visual Guide)
+  const [imageMode, setImageMode] = useState<ImageMode>('picsum');
+  const [globalRefreshKey, setGlobalRefreshKey] = useState<number>(0);
 
   const {
     people,
@@ -50,6 +55,10 @@ export default function App() {
     setCurrentPage(1);
   };
 
+  const handleRefreshAllImages = () => {
+    setGlobalRefreshKey((prev) => prev + 1);
+  };
+
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans selection:bg-amber-500/30 selection:text-amber-200">
       
@@ -77,7 +86,7 @@ export default function App() {
         <div className="mb-8 space-y-2 text-left">
           <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs font-mono">
             <Sparkles className="w-3.5 h-3.5" />
-            <span>GALACTIC DIRECTORY • SWAPI REAL-TIME INTEGRATION</span>
+            <span>GALACTIC DIRECTORY • SWAPI.INFO API INTEGRATION</span>
           </div>
           <h2 className="text-2xl sm:text-4xl font-extrabold font-mono tracking-tight text-slate-100">
             Galactic Personnel Archives
@@ -100,6 +109,9 @@ export default function App() {
           allPlanets={allPlanets}
           allFilms={allFilms}
           onClearFilters={handleClearFilters}
+          imageMode={imageMode}
+          onImageModeChange={setImageMode}
+          onRefreshAllImages={handleRefreshAllImages}
         />
 
         {/* Content Section: Loader, Error, or Character Grid */}
@@ -142,6 +154,8 @@ export default function App() {
                     key={person.url}
                     person={person}
                     speciesName={speciesName}
+                    imageMode={imageMode}
+                    globalRefreshKey={globalRefreshKey}
                     onClick={() => setSelectedPerson(person)}
                   />
                 );
@@ -167,6 +181,8 @@ export default function App() {
       <CharacterModal
         person={selectedPerson}
         speciesName={selectedPerson ? speciesMap[extractIdFromUrl(selectedPerson.url)] || 'Human' : 'Human'}
+        imageMode={imageMode}
+        refreshKey={globalRefreshKey}
         onClose={() => setSelectedPerson(null)}
       />
 
@@ -177,7 +193,7 @@ export default function App() {
           <div className="flex items-center space-x-4">
             <span className="hover:text-amber-400 transition-colors cursor-pointer">SWAPI API v1</span>
             <span>•</span>
-            <span className="hover:text-amber-400 transition-colors cursor-pointer">Star Wars 4:5 Character Portraits</span>
+            <span className="hover:text-amber-400 transition-colors cursor-pointer">Picsum & Visual Guide Portraits</span>
           </div>
         </div>
       </footer>

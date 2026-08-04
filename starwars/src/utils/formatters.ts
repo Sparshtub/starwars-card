@@ -1,8 +1,4 @@
-import { 
-  getCharacterImageUrl as resolveCharacterImageUrl, 
-  getAkababGitHubImageUrl, 
-  getPicsumPortraitUrl 
-} from '../services/characterImages';
+import { resolveCharacterImageUrl, getOfficialPortraitUrl, getRandomPicsumUrl, ImageMode } from '../services/characterImages';
 
 /**
  * Formats height from centimeters to meters with 2 decimal places.
@@ -73,17 +69,19 @@ export function extractIdFromUrl(url: string): string {
   return matches ? matches[1] : '1';
 }
 
-export function getAkababFallbackUrl(characterName: string): string {
-  return getAkababGitHubImageUrl(characterName);
+export function getStarWarsVisualGuideUrl(id: string): string {
+  return getOfficialPortraitUrl(id);
 }
 
 export function getPicsumImageUrl(characterName: string, id: string, refreshKey: number = 0): string {
-  return getPicsumPortraitUrl(characterName, id, refreshKey);
+  return getRandomPicsumUrl(characterName, id, refreshKey);
 }
 
-/**
- * Combined character portrait image resolver matching card 4:5 aspect ratio.
- */
-export function getCharacterImageUrl(characterName: string, id: string): string {
-  return resolveCharacterImageUrl(characterName, id);
+export function getCharacterImageUrl(
+  characterName: string,
+  id: string,
+  mode: ImageMode = 'picsum',
+  refreshKey: number = 0
+): string {
+  return resolveCharacterImageUrl(characterName, id, mode, refreshKey);
 }

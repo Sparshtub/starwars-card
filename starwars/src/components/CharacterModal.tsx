@@ -1,33 +1,40 @@
 import React, { useEffect, useState } from 'react';
 import type { Person } from '../types/starwars';
+import type { ImageMode } from '../services/characterImages';
 import { useHomeworld } from '../hooks/useHomeworld';
-import { formatHeight, formatMass, formatDate, formatPopulation, extractIdFromUrl, getCharacterImageUrl, getAkababFallbackUrl, getPicsumImageUrl } from '../utils/formatters';
+import { formatHeight, formatMass, formatDate, formatPopulation, extractIdFromUrl, getCharacterImageUrl, getPicsumImageUrl } from '../utils/formatters';
 import { getSpeciesTheme } from '../utils/speciesColors';
 import { X, Globe, Calendar, Film, Ruler, Weight, Sparkles, Compass, Thermometer, Users, ShieldAlert } from 'lucide-react';
 
 interface CharacterModalProps {
   person: Person | null;
   speciesName?: string;
+  imageMode?: ImageMode;
+  refreshKey?: number;
   onClose: () => void;
 }
 
-export const CharacterModal: React.FC<CharacterModalProps> = ({ person, speciesName = 'Human', onClose }) => {
+export const CharacterModal: React.FC<CharacterModalProps> = ({
+  person,
+  speciesName = 'Human',
+  imageMode = 'picsum',
+  refreshKey = 0,
+  onClose,
+}) => {
   const { planet, loading: planetLoading, error: planetError } = useHomeworld(person ? person.homeworld : null);
 
-  const [fallbackStage, setFallbackStage] = useState<number>(0);
   const [imageSrc, setImageSrc] = useState<string | undefined>(() => 
-    person ? getCharacterImageUrl(person.name, extractIdFromUrl(person.url)) : undefined
+    person ? getCharacterImageUrl(person.name, extractIdFromUrl(person.url), imageMode, refreshKey) : undefined
   );
 
   useEffect(() => {
     if (person) {
       const id = extractIdFromUrl(person.url);
-      setFallbackStage(0);
-      setImageSrc(getCharacterImageUrl(person.name, id));
+      setImageSrc(getCharacterImageUrl(person.name, id, imageMode, refreshKey));
     } else {
       setImageSrc(undefined);
     }
-  }, [person]);
+  }, [person, imageMode, refreshKey]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -45,12 +52,9 @@ export const CharacterModal: React.FC<CharacterModalProps> = ({ person, speciesN
   const theme = getSpeciesTheme(speciesName);
 
   const handleImageError = () => {
-    if (fallbackStage === 0) {
-      setFallbackStage(1);
-      setImageSrc(getAkababFallbackUrl(person.name));
-    } else if (fallbackStage === 1) {
-      setFallbackStage(2);
-      setImageSrc(getPicsumImageUrl(person.name, id));
+    const fallbackUrl = getPicsumImageUrl(person.name, id, refreshKey);
+    if (imageSrc !== fallbackUrl) {
+      setImageSrc(fallbackUrl);
     }
   };
 

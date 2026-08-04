@@ -1,49 +1,37 @@
-/**
- * Converts a character name to a clean url slug.
- * Example: "Luke Skywalker" -> "luke-skywalker"
- */
-export function getCharacterSlug(name: string): string {
-  if (!name) return 'character';
-  return name
-    .toLowerCase()
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/(^-|-$)/g, '');
-}
+export type ImageMode = 'picsum' | 'official';
 
 /**
- * 1. Primary: Star Wars Visual Guide 400x500 (4:5 aspect ratio) portrait endpoint.
+ * Generates an official Star Wars Visual Guide 400x500 portrait URL for SWAPI character ID.
  */
-export function getVisualGuideImageUrl(id: string): string {
-  if (id && !isNaN(parseInt(id, 10))) {
+export function getOfficialPortraitUrl(id: string): string {
+  if (id && !isNaN(parseInt(id, 10)) && parseInt(id, 10) <= 87) {
     return `https://starwars-visualguide.com/assets/img/characters/${id}.jpg`;
   }
   return `https://starwars-visualguide.com/assets/img/characters/1.jpg`;
 }
 
 /**
- * 2. Secondary: Akabab Star Wars API GitHub CDN portrait repository.
+ * Generates a fresh random picture from Picsum Photos per character.
+ * Appends a timestamp / refresh seed so every refresh generates a new image.
  */
-export function getAkababGitHubImageUrl(characterName: string): string {
-  const slug = getCharacterSlug(characterName);
-  return `https://raw.githubusercontent.com/akabab/starwars-api/master/api/images/${slug}.jpg`;
-}
-
-/**
- * 3. Tertiary: Picsum 400x500 (4:5 aspect ratio) seeded portrait fallback.
- */
-export function getPicsumPortraitUrl(characterName: string, id: string, refreshKey: number = 0): string {
-  const seed = `${id}-${getCharacterSlug(characterName)}${refreshKey > 0 ? `-${refreshKey}` : ''}`;
+export function getRandomPicsumUrl(characterName: string, id: string, seedOffset: number = 0): string {
+  const cleanName = (characterName || 'character').toLowerCase().replace(/[^a-z0-9]/g, '');
+  const timestamp = Math.floor(Date.now() / 10000); // changes periodically
+  const seed = `${id}-${cleanName}-${timestamp}-${seedOffset}`;
   return `https://picsum.photos/seed/${seed}/400/500`;
 }
 
 /**
- * Resolves the initial optimal 4:5 aspect ratio character portrait URL.
+ * Resolves character portrait image based on selected image mode.
  */
-export function getCharacterImageUrl(characterName: string, id: string): string {
-  if (id && !isNaN(parseInt(id, 10)) && parseInt(id, 10) <= 87) {
-    return getVisualGuideImageUrl(id);
+export function resolveCharacterImageUrl(
+  characterName: string,
+  id: string,
+  mode: ImageMode = 'picsum',
+  refreshKey: number = 0
+): string {
+  if (mode === 'official') {
+    return getOfficialPortraitUrl(id);
   }
-  return getAkababGitHubImageUrl(characterName);
+  return getRandomPicsumUrl(characterName, id, refreshKey);
 }

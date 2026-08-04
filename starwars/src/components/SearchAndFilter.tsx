@@ -1,6 +1,7 @@
 import React from 'react';
 import type { Planet, Film } from '../types/starwars';
-import { Search, Filter, X, Globe, Dna, Clapperboard, Sparkles } from 'lucide-react';
+import type { ImageMode } from '../services/characterImages';
+import { Search, Filter, X, Globe, Dna, Clapperboard, RefreshCw, Image, Sparkles } from 'lucide-react';
 
 interface SearchAndFilterProps {
   searchQuery: string;
@@ -14,6 +15,9 @@ interface SearchAndFilterProps {
   allPlanets: Planet[];
   allFilms: Film[];
   onClearFilters: () => void;
+  imageMode: ImageMode;
+  onImageModeChange: (mode: ImageMode) => void;
+  onRefreshAllImages: () => void;
 }
 
 const SPECIES_OPTIONS = [
@@ -41,6 +45,9 @@ export const SearchAndFilter: React.FC<SearchAndFilterProps> = ({
   allPlanets,
   allFilms,
   onClearFilters,
+  imageMode,
+  onImageModeChange,
+  onRefreshAllImages,
 }) => {
   const hasActiveFilters = Boolean(
     searchQuery || selectedHomeworld || selectedSpecies || selectedFilm
@@ -48,7 +55,7 @@ export const SearchAndFilter: React.FC<SearchAndFilterProps> = ({
 
   return (
     <div className="bg-slate-900/90 border border-slate-800 rounded-2xl p-4 sm:p-5 shadow-lg backdrop-blur-sm space-y-4 mb-8">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800/80 pb-3">
         <div className="flex items-center space-x-2">
           <Filter className="w-4 h-4 text-amber-400" />
           <h2 className="text-sm font-semibold font-mono uppercase tracking-wider text-slate-200">
@@ -56,15 +63,52 @@ export const SearchAndFilter: React.FC<SearchAndFilterProps> = ({
           </h2>
         </div>
 
-        {hasActiveFilters && (
+        {/* Image Source Mode & Refresh Controls */}
+        <div className="flex items-center space-x-2">
+          <div className="flex items-center bg-slate-950 p-1 rounded-xl border border-slate-800 text-xs font-mono">
+            <button
+              onClick={() => onImageModeChange('picsum')}
+              className={`flex items-center space-x-1 px-2.5 py-1 rounded-lg transition-all ${
+                imageMode === 'picsum'
+                  ? 'bg-amber-500/20 text-amber-300 font-bold border border-amber-500/40 shadow-sm'
+                  : 'text-slate-400 hover:text-slate-200'
+              }`}
+            >
+              <Sparkles className="w-3.5 h-3.5" />
+              <span>Picsum Random</span>
+            </button>
+            <button
+              onClick={() => onImageModeChange('official')}
+              className={`flex items-center space-x-1 px-2.5 py-1 rounded-lg transition-all ${
+                imageMode === 'official'
+                  ? 'bg-cyan-500/20 text-cyan-300 font-bold border border-cyan-500/40 shadow-sm'
+                  : 'text-slate-400 hover:text-slate-200'
+              }`}
+            >
+              <Image className="w-3.5 h-3.5" />
+              <span>Visual Guide</span>
+            </button>
+          </div>
+
           <button
-            onClick={onClearFilters}
-            className="flex items-center space-x-1 text-xs text-rose-400 hover:text-rose-300 bg-rose-500/10 hover:bg-rose-500/20 px-2.5 py-1 rounded-lg border border-rose-500/30 transition-colors"
+            onClick={onRefreshAllImages}
+            title="Refresh pics for all character cards"
+            className="flex items-center space-x-1 px-3 py-1.5 text-xs font-mono font-semibold text-amber-400 bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 rounded-xl transition-all"
           >
-            <X className="w-3.5 h-3.5" />
-            <span>Reset Filters</span>
+            <RefreshCw className="w-3.5 h-3.5" />
+            <span className="hidden sm:inline">Refresh Pics</span>
           </button>
-        )}
+
+          {hasActiveFilters && (
+            <button
+              onClick={onClearFilters}
+              className="flex items-center space-x-1 text-xs text-rose-400 hover:text-rose-300 bg-rose-500/10 hover:bg-rose-500/20 px-2.5 py-1.5 rounded-xl border border-rose-500/30 transition-colors"
+            >
+              <X className="w-3.5 h-3.5" />
+              <span>Reset</span>
+            </button>
+          )}
+        </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-4 gap-3 sm:gap-4">
@@ -131,13 +175,6 @@ export const SearchAndFilter: React.FC<SearchAndFilterProps> = ({
           <Clapperboard className="w-4 h-4 text-slate-500 absolute left-3 top-3 pointer-events-none" />
         </div>
       </div>
-
-      {hasActiveFilters && (
-        <div className="flex items-center space-x-2 text-xs text-slate-400 font-mono pt-1">
-          <Sparkles className="w-3.5 h-3.5 text-amber-400" />
-          <span>Active filter parameters combined with real-time SWAPI pagination</span>
-        </div>
-      )}
     </div>
   );
 };
