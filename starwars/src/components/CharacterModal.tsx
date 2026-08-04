@@ -1,7 +1,7 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import type { Person } from '../types/starwars';
 import { useHomeworld } from '../hooks/useHomeworld';
-import { formatHeight, formatMass, formatDate, formatPopulation, extractIdFromUrl, getCharacterImageUrl } from '../utils/formatters';
+import { formatHeight, formatMass, formatDate, formatPopulation, extractIdFromUrl, getCharacterImageUrl, getPicsumImageUrl } from '../utils/formatters';
 import { getSpeciesTheme } from '../utils/speciesColors';
 import { X, Globe, Calendar, Film, Ruler, Weight, Sparkles, Compass, Thermometer, Users, ShieldAlert } from 'lucide-react';
 
@@ -13,6 +13,15 @@ interface CharacterModalProps {
 
 export const CharacterModal: React.FC<CharacterModalProps> = ({ person, speciesName = 'Human', onClose }) => {
   const { planet, loading: planetLoading, error: planetError } = useHomeworld(person ? person.homeworld : null);
+
+  const [imageSrc, setImageSrc] = useState<string>('');
+
+  useEffect(() => {
+    if (person) {
+      const id = extractIdFromUrl(person.url);
+      setImageSrc(getCharacterImageUrl(person.name, id));
+    }
+  }, [person]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -27,8 +36,14 @@ export const CharacterModal: React.FC<CharacterModalProps> = ({ person, speciesN
   if (!person) return null;
 
   const id = extractIdFromUrl(person.url);
-  const imageUrl = getCharacterImageUrl(person.name, id);
   const theme = getSpeciesTheme(speciesName);
+
+  const handleImageError = () => {
+    const fallbackUrl = getPicsumImageUrl(person.name, id);
+    if (imageSrc !== fallbackUrl) {
+      setImageSrc(fallbackUrl);
+    }
+  };
 
   return (
     <div 
@@ -45,8 +60,9 @@ export const CharacterModal: React.FC<CharacterModalProps> = ({ person, speciesN
         {/* Modal Top Banner with Image Overlay */}
         <div className="relative h-48 sm:h-56 w-full overflow-hidden bg-slate-950 shrink-0">
           <img
-            src={imageUrl}
+            src={imageSrc}
             alt={person.name}
+            onError={handleImageError}
             className="w-full h-full object-cover object-center opacity-70"
           />
           <div className={`absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/60 to-transparent`} />

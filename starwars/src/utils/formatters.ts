@@ -68,9 +68,26 @@ export function extractIdFromUrl(url: string): string {
 }
 
 /**
- * Generates a high quality deterministic Picsum image URL based on character ID / name.
+ * Primary Star Wars character portrait endpoint from Star Wars Visual Guide.
+ */
+export function getStarWarsVisualGuideUrl(id: string): string {
+  return `https://starwars-visualguide.com/assets/img/characters/${id}.jpg`;
+}
+
+/**
+ * Fallback Picsum image URL based on character seed and optional refresh count.
+ */
+export function getPicsumImageUrl(characterName: string, id: string, refreshKey: number = 0): string {
+  const seed = `${id}-${characterName.toLowerCase().replace(/[^a-z0-9]/g, '')}${refreshKey > 0 ? `-${refreshKey}` : ''}`;
+  return `https://picsum.photos/seed/${seed}/400/500`;
+}
+
+/**
+ * Combined character portrait image resolver.
  */
 export function getCharacterImageUrl(characterName: string, id: string): string {
-  const seed = `${id}-${characterName.toLowerCase().replace(/[^a-z0-9]/g, '')}`;
-  return `https://picsum.photos/seed/${seed}/400/500`;
+  if (id && !isNaN(parseInt(id, 10))) {
+    return getStarWarsVisualGuideUrl(id);
+  }
+  return getPicsumImageUrl(characterName, id);
 }

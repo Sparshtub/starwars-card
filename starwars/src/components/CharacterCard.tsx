@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import type { Person } from '../types/starwars';
-import { extractIdFromUrl, getCharacterImageUrl, formatHeight, formatMass } from '../utils/formatters';
+import { extractIdFromUrl, getCharacterImageUrl, getPicsumImageUrl, formatHeight, formatMass } from '../utils/formatters';
 import { getSpeciesTheme } from '../utils/speciesColors';
-import { ExternalLink, Film, Ruler, Weight } from 'lucide-react';
+import { ExternalLink, Film, Ruler, Weight, RefreshCw } from 'lucide-react';
 
 interface CharacterCardProps {
   person: Person;
@@ -12,8 +12,25 @@ interface CharacterCardProps {
 
 export const CharacterCard: React.FC<CharacterCardProps> = ({ person, speciesName = 'Human', onClick }) => {
   const id = extractIdFromUrl(person.url);
-  const imageUrl = getCharacterImageUrl(person.name, id);
+  const [refreshKey, setRefreshKey] = useState<number>(0);
+  const [imageSrc, setImageSrc] = useState<string>(() => getCharacterImageUrl(person.name, id));
+
   const theme = getSpeciesTheme(speciesName);
+
+  const handleImageError = () => {
+    // If official Star Wars image fails to load, fallback seamlessly to seeded Picsum photo
+    const fallbackUrl = getPicsumImageUrl(person.name, id, refreshKey);
+    if (imageSrc !== fallbackUrl) {
+      setImageSrc(fallbackUrl);
+    }
+  };
+
+  const handleRefreshPicture = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    const nextKey = refreshKey + 1;
+    setRefreshKey(nextKey);
+    setImageSrc(getPicsumImageUrl(person.name, id, nextKey));
+  };
 
   return (
     <div
@@ -34,15 +51,16 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({ person, speciesNam
       {/* Card Image Section */}
       <div className="relative aspect-[4/5] w-full overflow-hidden bg-slate-950">
         <img
-          src={imageUrl}
+          src={imageSrc}
           alt={person.name}
+          onError={handleImageError}
           loading="lazy"
           className="w-full h-full object-cover object-center group-hover:scale-110 transition-transform duration-500 ease-out"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/30 to-transparent" />
 
         {/* Species Badge */}
-        <div className="absolute top-3 left-3">
+        <div className="absolute top-3 left-3 z-10">
           <span
             className={`inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-semibold font-mono tracking-wide backdrop-blur-md border ${theme.badgeBg} ${theme.badgeText} ${theme.badgeBorder} shadow-md`}
           >
@@ -50,8 +68,15 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({ person, speciesNam
           </span>
         </div>
 
-        {/* Film Count Pill */}
-        <div className="absolute top-3 right-3">
+        {/* Top Right Actions: Film Count & Refresh Picture */}
+        <div className="absolute top-3 right-3 flex items-center space-x-1.5 z-10">
+          <button
+            onClick={handleRefreshPicture}
+            title="Refresh character picture"
+            className="p-1 rounded-lg bg-slate-950/80 hover:bg-slate-900 text-slate-400 hover:text-amber-400 border border-slate-800 backdrop-blur-md shadow-md transition-colors opacity-0 group-hover:opacity-100"
+          >
+            <RefreshCw className="w-3.5 h-3.5" />
+          </button>
           <span className="inline-flex items-center space-x-1 px-2.5 py-1 rounded-lg text-xs font-semibold font-mono bg-slate-950/80 backdrop-blur-md border border-slate-800 text-slate-300 shadow-md">
             <Film className="w-3 h-3 text-amber-400" />
             <span>{person.films.length}</span>
