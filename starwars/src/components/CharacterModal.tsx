@@ -14,12 +14,16 @@ interface CharacterModalProps {
 export const CharacterModal: React.FC<CharacterModalProps> = ({ person, speciesName = 'Human', onClose }) => {
   const { planet, loading: planetLoading, error: planetError } = useHomeworld(person ? person.homeworld : null);
 
-  const [imageSrc, setImageSrc] = useState<string>('');
+  const [imageSrc, setImageSrc] = useState<string | undefined>(() => 
+    person ? getCharacterImageUrl(person.name, extractIdFromUrl(person.url)) : undefined
+  );
 
   useEffect(() => {
     if (person) {
       const id = extractIdFromUrl(person.url);
       setImageSrc(getCharacterImageUrl(person.name, id));
+    } else {
+      setImageSrc(undefined);
     }
   }, [person]);
 
@@ -60,7 +64,7 @@ export const CharacterModal: React.FC<CharacterModalProps> = ({ person, speciesN
         {/* Modal Top Banner with Image Overlay */}
         <div className="relative h-48 sm:h-56 w-full overflow-hidden bg-slate-950 shrink-0">
           <img
-            src={imageSrc}
+            src={imageSrc || undefined}
             alt={person.name}
             onError={handleImageError}
             className="w-full h-full object-cover object-center opacity-70"
