@@ -1,0 +1,24 @@
+# Dependencies
+node_modules
+starwars/node_modules
+
+# Production builds
+dist
+dist-ssr
+starwars/dist
+
+# IDE and agent directories
+.claude
+.kilo
+.kilocode
+.windsurf
+.vscode
+.idea
+
+# Logs & temp files
+*.log
+logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.DS_Store
