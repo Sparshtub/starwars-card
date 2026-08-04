@@ -92,7 +92,9 @@ export function usePeople({
     return people.filter((person) => {
       // Homeworld filter
       if (selectedHomeworld) {
-        if (person.homeworld !== selectedHomeworld) return false;
+        const targetId = extractIdFromUrl(selectedHomeworld);
+        const personHomeworldId = extractIdFromUrl(person.homeworld);
+        if (personHomeworldId !== targetId) return false;
       }
 
       // Species filter
@@ -110,7 +112,9 @@ export function usePeople({
 
       // Film filter
       if (selectedFilm) {
-        if (!person.films.includes(selectedFilm)) return false;
+        const targetFilmId = extractIdFromUrl(selectedFilm);
+        const personFilmIds = person.films.map(extractIdFromUrl);
+        if (!personFilmIds.includes(targetFilmId)) return false;
       }
 
       return true;
