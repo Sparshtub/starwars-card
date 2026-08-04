@@ -17,20 +17,20 @@ interface CharacterModalProps {
 export const CharacterModal: React.FC<CharacterModalProps> = ({
   person,
   speciesName = 'Human',
-  imageMode = 'picsum',
+  imageMode = 'official',
   refreshKey = 0,
   onClose,
 }) => {
   const { planet, loading: planetLoading, error: planetError } = useHomeworld(person ? person.homeworld : null);
 
   const [imageSrc, setImageSrc] = useState<string | undefined>(() => 
-    person ? getCharacterImageUrl(person.name, extractIdFromUrl(person.url), imageMode, refreshKey) : undefined
+    person ? getCharacterImageUrl(person, extractIdFromUrl(person.url), imageMode, refreshKey) : undefined
   );
 
   useEffect(() => {
     if (person) {
       const id = extractIdFromUrl(person.url);
-      setImageSrc(getCharacterImageUrl(person.name, id, imageMode, refreshKey));
+      setImageSrc(getCharacterImageUrl(person, id, imageMode, refreshKey));
     } else {
       setImageSrc(undefined);
     }

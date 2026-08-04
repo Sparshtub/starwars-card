@@ -20,8 +20,8 @@ export default function App() {
   const [selectedFilm, setSelectedFilm] = useState<string>('');
   const [selectedPerson, setSelectedPerson] = useState<Person | null>(null);
 
-  // Image mode state ('picsum' for random pictures as requested in prompt hint, 'official' for Visual Guide)
-  const [imageMode, setImageMode] = useState<ImageMode>('picsum');
+  // Default image mode is 'official' utilizing Akabab Star Wars API high-definition photos
+  const [imageMode, setImageMode] = useState<ImageMode>('official');
   const [globalRefreshKey, setGlobalRefreshKey] = useState<number>(0);
 
   const {
@@ -86,7 +86,7 @@ export default function App() {
         <div className="mb-8 space-y-2 text-left">
           <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs font-mono">
             <Sparkles className="w-3.5 h-3.5" />
-            <span>GALACTIC DIRECTORY • SWAPI.INFO API INTEGRATION</span>
+            <span>GALACTIC DIRECTORY • AKABAB STAR WARS API INTEGRATION</span>
           </div>
           <h2 className="text-2xl sm:text-4xl font-extrabold font-mono tracking-tight text-slate-100">
             Galactic Personnel Archives
@@ -189,11 +189,11 @@ export default function App() {
       {/* Footer */}
       <footer className="relative z-10 border-t border-slate-800/80 bg-slate-950/80 py-6 text-center text-xs font-mono text-slate-500">
         <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3">
-          <p>© {new Date().getFullYear()} Galactic Archives • Built with React, TypeScript & SWAPI API</p>
+          <p>© {new Date().getFullYear()} Galactic Archives • Powered by Akabab Star Wars API</p>
           <div className="flex items-center space-x-4">
-            <span className="hover:text-amber-400 transition-colors cursor-pointer">SWAPI API v1</span>
+            <span className="hover:text-amber-400 transition-colors cursor-pointer">Akabab API v0.2</span>
             <span>•</span>
-            <span className="hover:text-amber-400 transition-colors cursor-pointer">Picsum & Visual Guide Portraits</span>
+            <span className="hover:text-amber-400 transition-colors cursor-pointer">Official High-Res Portraits</span>
           </div>
         </div>
       </footer>

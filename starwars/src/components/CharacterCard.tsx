@@ -16,7 +16,7 @@ interface CharacterCardProps {
 export const CharacterCard: React.FC<CharacterCardProps> = ({
   person,
   speciesName = 'Human',
-  imageMode = 'picsum',
+  imageMode = 'official',
   globalRefreshKey = 0,
   onClick,
 }) => {
@@ -24,12 +24,12 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
   const [localRefreshKey, setLocalRefreshKey] = useState<number>(0);
 
   const [imageSrc, setImageSrc] = useState<string>(() =>
-    getCharacterImageUrl(person.name, id, imageMode, globalRefreshKey)
+    getCharacterImageUrl(person, id, imageMode, globalRefreshKey)
   );
 
   useEffect(() => {
-    setImageSrc(getCharacterImageUrl(person.name, id, imageMode, globalRefreshKey + localRefreshKey));
-  }, [person.name, id, imageMode, globalRefreshKey, localRefreshKey]);
+    setImageSrc(getCharacterImageUrl(person, id, imageMode, globalRefreshKey + localRefreshKey));
+  }, [person, id, imageMode, globalRefreshKey, localRefreshKey]);
 
   const theme = getSpeciesTheme(speciesName);
 

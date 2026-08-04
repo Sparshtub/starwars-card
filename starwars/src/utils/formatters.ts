@@ -1,3 +1,4 @@
+import type { Person } from '../types/starwars';
 import { resolveCharacterImageUrl, getOfficialPortraitUrl, getRandomPicsumUrl, type ImageMode } from '../services/characterImages';
 
 /**
@@ -78,10 +79,10 @@ export function getPicsumImageUrl(characterName: string, id: string, refreshKey:
 }
 
 export function getCharacterImageUrl(
-  characterName: string,
+  personOrName: Person | string,
   id: string,
-  mode: ImageMode = 'picsum',
+  mode: ImageMode = 'official',
   refreshKey: number = 0
 ): string {
-  return resolveCharacterImageUrl(characterName, id, mode, refreshKey);
+  return resolveCharacterImageUrl(personOrName, id, mode, refreshKey);
 }

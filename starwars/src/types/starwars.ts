@@ -15,6 +15,7 @@ export interface Person {
   created: string;
   edited: string;
   url: string;
+  image?: string;
 }
 
 export interface Planet {

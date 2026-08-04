@@ -1,3 +1,5 @@
+import type { Person } from '../types/starwars';
+
 export type ImageMode = 'picsum' | 'official';
 
 /**
@@ -16,22 +18,29 @@ export function getOfficialPortraitUrl(id: string): string {
  */
 export function getRandomPicsumUrl(characterName: string, id: string, seedOffset: number = 0): string {
   const cleanName = (characterName || 'character').toLowerCase().replace(/[^a-z0-9]/g, '');
-  const timestamp = Math.floor(Date.now() / 10000); // changes periodically
+  const timestamp = Math.floor(Date.now() / 10000);
   const seed = `${id}-${cleanName}-${timestamp}-${seedOffset}`;
   return `https://picsum.photos/seed/${seed}/400/500`;
 }
 
 /**
  * Resolves character portrait image based on selected image mode.
+ * Uses character object's attached Akabab image if available.
  */
 export function resolveCharacterImageUrl(
-  characterName: string,
+  personOrName: Person | string,
   id: string,
-  mode: ImageMode = 'picsum',
+  mode: ImageMode = 'official',
   refreshKey: number = 0
 ): string {
+  const name = typeof personOrName === 'string' ? personOrName : personOrName.name;
+  const attachedImage = typeof personOrName === 'object' && personOrName ? personOrName.image : undefined;
+
   if (mode === 'official') {
+    if (attachedImage) {
+      return attachedImage;
+    }
     return getOfficialPortraitUrl(id);
   }
-  return getRandomPicsumUrl(characterName, id, refreshKey);
+  return getRandomPicsumUrl(name, id, refreshKey);
 }
