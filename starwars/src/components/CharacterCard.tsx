@@ -61,7 +61,7 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
       className={`group relative rounded-2xl bg-slate-900/90 border ${theme.cardBorder} ${theme.cardGlow} overflow-hidden cursor-pointer transition-all duration-300 transform hover:-translate-y-2 hover:scale-[1.02] shadow-lg focus:outline-none focus:ring-2 focus:ring-amber-400`}
     >
       {/* Background Gradient Header Glow */}
-      <div className={`absolute inset-0 bg-gradient-to-b ${theme.gradientHeader} opacity-60 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none`} />
+      <div className={`absolute inset-0 bg-gradient-to-b ${theme.gradientHeader} opacity-50 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none`} />
 
       {/* Card Image Section - Standardized 4:5 Aspect Ratio */}
       <div className="relative aspect-[4/5] w-full overflow-hidden bg-slate-950">
@@ -70,14 +70,14 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
           alt={person.name}
           onError={handleImageError}
           loading="lazy"
-          className="w-full h-full object-cover object-top group-hover:scale-110 transition-transform duration-500 ease-out"
+          className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500 ease-out"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent opacity-90 group-hover:opacity-75 transition-opacity" />
 
         {/* Species Badge */}
         <div className="absolute top-3 left-3 z-10">
           <span
-            className={`inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-semibold font-mono tracking-wide backdrop-blur-md border ${theme.badgeBg} ${theme.badgeText} ${theme.badgeBorder} shadow-md`}
+            className={`inline-flex items-center px-2.5 py-1 rounded-xl text-[11px] font-bold font-mono tracking-wide backdrop-blur-md border ${theme.badgeBg} ${theme.badgeText} ${theme.badgeBorder} shadow-md`}
           >
             {speciesName}
           </span>
@@ -88,28 +88,30 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
           <button
             onClick={handleRefreshPicture}
             title="Refresh random picture for this character"
-            className="p-1 rounded-lg bg-slate-950/80 hover:bg-slate-900 text-slate-400 hover:text-amber-400 border border-slate-800 backdrop-blur-md shadow-md transition-colors opacity-0 group-hover:opacity-100"
+            className="p-1.5 rounded-xl bg-slate-950/80 hover:bg-slate-900 text-slate-400 hover:text-amber-400 border border-slate-800 backdrop-blur-md shadow-md transition-colors opacity-0 group-hover:opacity-100"
           >
             <RefreshCw className="w-3.5 h-3.5" />
           </button>
-          <span className="inline-flex items-center space-x-1 px-2.5 py-1 rounded-lg text-xs font-semibold font-mono bg-slate-950/80 backdrop-blur-md border border-slate-800 text-slate-300 shadow-md">
+          <span className="inline-flex items-center space-x-1 px-2.5 py-1 rounded-xl text-[11px] font-bold font-mono bg-slate-950/80 backdrop-blur-md border border-slate-800 text-slate-300 shadow-md">
             <Film className="w-3 h-3 text-amber-400" />
             <span>{person.films.length}</span>
           </span>
         </div>
+
+        {/* Character Title Overlaid on Gradient Bottom */}
+        <div className="absolute bottom-3 left-4 right-4 z-10">
+          <div className="flex items-center justify-between">
+            <h3 className="text-base font-bold font-mono text-white group-hover:text-amber-300 transition-colors line-clamp-1 drop-shadow-md">
+              {person.name}
+            </h3>
+            <ExternalLink className="w-3.5 h-3.5 text-slate-400 group-hover:text-amber-400 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all shrink-0 ml-1" />
+          </div>
+        </div>
       </div>
 
-      {/* Card Body */}
-      <div className="relative p-5 space-y-3">
-        <div className="flex items-start justify-between">
-          <h3 className="text-lg font-bold font-mono text-slate-100 group-hover:text-amber-300 transition-colors line-clamp-1">
-            {person.name}
-          </h3>
-          <ExternalLink className="w-4 h-4 text-slate-500 group-hover:text-amber-400 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all shrink-0 mt-1" />
-        </div>
-
-        {/* Quick Specs Grid */}
-        <div className="grid grid-cols-2 gap-2 text-xs font-mono pt-1 text-slate-400 border-t border-slate-800/80">
+      {/* Quick Specs Footer Grid */}
+      <div className="p-3.5 bg-slate-950/60 border-t border-slate-800/80">
+        <div className="grid grid-cols-2 gap-2 text-[11px] font-mono text-slate-400">
           <div className="flex items-center space-x-1.5">
             <Ruler className="w-3.5 h-3.5 text-cyan-400" />
             <span>{formatHeight(person.height)}</span>
