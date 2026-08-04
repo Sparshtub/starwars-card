@@ -1,4 +1,4 @@
-import { resolveCharacterImageUrl, getOfficialPortraitUrl, getRandomPicsumUrl, ImageMode } from '../services/characterImages';
+import { resolveCharacterImageUrl, getOfficialPortraitUrl, getRandomPicsumUrl, type ImageMode } from '../services/characterImages';
 
 /**
  * Formats height from centimeters to meters with 2 decimal places.
