@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import type { Person } from '../types/starwars';
-import { extractIdFromUrl, getCharacterImageUrl, getPicsumImageUrl, formatHeight, formatMass } from '../utils/formatters';
+import { extractIdFromUrl, getCharacterImageUrl, getAkababFallbackUrl, getPicsumImageUrl, formatHeight, formatMass } from '../utils/formatters';
 import { getSpeciesTheme } from '../utils/speciesColors';
 import { ExternalLink, Film, Ruler, Weight, RefreshCw } from 'lucide-react';
 
@@ -13,15 +13,18 @@ interface CharacterCardProps {
 export const CharacterCard: React.FC<CharacterCardProps> = ({ person, speciesName = 'Human', onClick }) => {
   const id = extractIdFromUrl(person.url);
   const [refreshKey, setRefreshKey] = useState<number>(0);
+  const [fallbackStage, setFallbackStage] = useState<number>(0); // 0: Primary, 1: Akabab, 2: Picsum
   const [imageSrc, setImageSrc] = useState<string>(() => getCharacterImageUrl(person.name, id));
 
   const theme = getSpeciesTheme(speciesName);
 
   const handleImageError = () => {
-    // If official Star Wars image fails to load, fallback seamlessly to seeded Picsum photo
-    const fallbackUrl = getPicsumImageUrl(person.name, id, refreshKey);
-    if (imageSrc !== fallbackUrl) {
-      setImageSrc(fallbackUrl);
+    if (fallbackStage === 0) {
+      setFallbackStage(1);
+      setImageSrc(getAkababFallbackUrl(person.name));
+    } else if (fallbackStage === 1) {
+      setFallbackStage(2);
+      setImageSrc(getPicsumImageUrl(person.name, id, refreshKey));
     }
   };
 
@@ -29,6 +32,7 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({ person, speciesNam
     e.stopPropagation();
     const nextKey = refreshKey + 1;
     setRefreshKey(nextKey);
+    setFallbackStage(2);
     setImageSrc(getPicsumImageUrl(person.name, id, nextKey));
   };
 
@@ -48,16 +52,16 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({ person, speciesNam
       {/* Background Gradient Header Glow */}
       <div className={`absolute inset-0 bg-gradient-to-b ${theme.gradientHeader} opacity-60 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none`} />
 
-      {/* Card Image Section */}
+      {/* Card Image Section - Standardized 4:5 Aspect Ratio */}
       <div className="relative aspect-[4/5] w-full overflow-hidden bg-slate-950">
         <img
           src={imageSrc}
           alt={person.name}
           onError={handleImageError}
           loading="lazy"
-          className="w-full h-full object-cover object-center group-hover:scale-110 transition-transform duration-500 ease-out"
+          className="w-full h-full object-cover object-top group-hover:scale-110 transition-transform duration-500 ease-out"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/30 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent" />
 
         {/* Species Badge */}
         <div className="absolute top-3 left-3 z-10">
@@ -72,7 +76,7 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({ person, speciesNam
         <div className="absolute top-3 right-3 flex items-center space-x-1.5 z-10">
           <button
             onClick={handleRefreshPicture}
-            title="Refresh character picture"
+            title="Refresh character portrait"
             className="p-1 rounded-lg bg-slate-950/80 hover:bg-slate-900 text-slate-400 hover:text-amber-400 border border-slate-800 backdrop-blur-md shadow-md transition-colors opacity-0 group-hover:opacity-100"
           >
             <RefreshCw className="w-3.5 h-3.5" />

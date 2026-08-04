@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import type { Person } from '../types/starwars';
 import { useHomeworld } from '../hooks/useHomeworld';
-import { formatHeight, formatMass, formatDate, formatPopulation, extractIdFromUrl, getCharacterImageUrl, getPicsumImageUrl } from '../utils/formatters';
+import { formatHeight, formatMass, formatDate, formatPopulation, extractIdFromUrl, getCharacterImageUrl, getAkababFallbackUrl, getPicsumImageUrl } from '../utils/formatters';
 import { getSpeciesTheme } from '../utils/speciesColors';
 import { X, Globe, Calendar, Film, Ruler, Weight, Sparkles, Compass, Thermometer, Users, ShieldAlert } from 'lucide-react';
 
@@ -14,6 +14,7 @@ interface CharacterModalProps {
 export const CharacterModal: React.FC<CharacterModalProps> = ({ person, speciesName = 'Human', onClose }) => {
   const { planet, loading: planetLoading, error: planetError } = useHomeworld(person ? person.homeworld : null);
 
+  const [fallbackStage, setFallbackStage] = useState<number>(0);
   const [imageSrc, setImageSrc] = useState<string | undefined>(() => 
     person ? getCharacterImageUrl(person.name, extractIdFromUrl(person.url)) : undefined
   );
@@ -21,6 +22,7 @@ export const CharacterModal: React.FC<CharacterModalProps> = ({ person, speciesN
   useEffect(() => {
     if (person) {
       const id = extractIdFromUrl(person.url);
+      setFallbackStage(0);
       setImageSrc(getCharacterImageUrl(person.name, id));
     } else {
       setImageSrc(undefined);
@@ -43,9 +45,12 @@ export const CharacterModal: React.FC<CharacterModalProps> = ({ person, speciesN
   const theme = getSpeciesTheme(speciesName);
 
   const handleImageError = () => {
-    const fallbackUrl = getPicsumImageUrl(person.name, id);
-    if (imageSrc !== fallbackUrl) {
-      setImageSrc(fallbackUrl);
+    if (fallbackStage === 0) {
+      setFallbackStage(1);
+      setImageSrc(getAkababFallbackUrl(person.name));
+    } else if (fallbackStage === 1) {
+      setFallbackStage(2);
+      setImageSrc(getPicsumImageUrl(person.name, id));
     }
   };
 
@@ -67,7 +72,7 @@ export const CharacterModal: React.FC<CharacterModalProps> = ({ person, speciesN
             src={imageSrc || undefined}
             alt={person.name}
             onError={handleImageError}
-            className="w-full h-full object-cover object-center opacity-70"
+            className="w-full h-full object-cover object-top opacity-70"
           />
           <div className={`absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/60 to-transparent`} />
           

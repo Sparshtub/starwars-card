@@ -1,4 +1,8 @@
-import { getCuratedCharacterImageUrl } from '../services/characterImages';
+import { 
+  getCharacterImageUrl as resolveCharacterImageUrl, 
+  getAkababGitHubImageUrl, 
+  getPicsumPortraitUrl 
+} from '../services/characterImages';
 
 /**
  * Formats height from centimeters to meters with 2 decimal places.
@@ -69,24 +73,17 @@ export function extractIdFromUrl(url: string): string {
   return matches ? matches[1] : '1';
 }
 
-/**
- * Primary Star Wars character portrait endpoint from Star Wars Visual Guide.
- */
-export function getStarWarsVisualGuideUrl(id: string): string {
-  return `https://starwars-visualguide.com/assets/img/characters/${id}.jpg`;
+export function getAkababFallbackUrl(characterName: string): string {
+  return getAkababGitHubImageUrl(characterName);
 }
 
-/**
- * Fallback Picsum image URL based on character seed and optional refresh count.
- */
 export function getPicsumImageUrl(characterName: string, id: string, refreshKey: number = 0): string {
-  const seed = `${id}-${characterName.toLowerCase().replace(/[^a-z0-9]/g, '')}${refreshKey > 0 ? `-${refreshKey}` : ''}`;
-  return `https://picsum.photos/seed/${seed}/400/500`;
+  return getPicsumPortraitUrl(characterName, id, refreshKey);
 }
 
 /**
- * Combined character portrait image resolver returning authentic curated character images.
+ * Combined character portrait image resolver matching card 4:5 aspect ratio.
  */
 export function getCharacterImageUrl(characterName: string, id: string): string {
-  return getCuratedCharacterImageUrl(characterName, id);
+  return resolveCharacterImageUrl(characterName, id);
 }
