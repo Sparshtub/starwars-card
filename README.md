@@ -117,7 +117,7 @@ starwars-cards/
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/Sparshtub/starwars-card.git
+   git clone https://github.com/Sparshtub/tsx-mern-6aug2026.git
    cd starwars-cards/starwars
    ```
 
