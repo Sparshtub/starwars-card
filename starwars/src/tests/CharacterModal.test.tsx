@@ -15,7 +15,18 @@ vi.mock('../hooks/useHomeworld', () => ({
       diameter: '10465',
       gravity: '1 standard',
       surface_water: '1',
-      residents: [],
+      residents: [
+        'https://swapi.py4e.com/api/people/1/',
+        'https://swapi.py4e.com/api/people/2/',
+        'https://swapi.py4e.com/api/people/4/',
+        'https://swapi.py4e.com/api/people/8/',
+        'https://swapi.py4e.com/api/people/9/',
+        'https://swapi.py4e.com/api/people/11/',
+        'https://swapi.py4e.com/api/people/43/',
+        'https://swapi.py4e.com/api/people/62/',
+        'https://swapi.py4e.com/api/people/67/',
+        'https://swapi.py4e.com/api/people/110/',
+      ],
       films: [],
       created: '2014-12-09T13:50:49.641000Z',
       edited: '2014-12-20T20:58:18.411000Z',
@@ -78,10 +89,11 @@ describe('CharacterModal Integration Test', () => {
     expect(screen.getByText('Birth Year: 19BBY')).toBeInTheDocument();
     expect(screen.getByText('4 films')).toBeInTheDocument();
 
-    // 6. Verify Homeworld info fetched and displayed (Tatooine, desert, and population count)
+    // 6. Verify Homeworld info fetched and displayed (Tatooine, desert, population count, and residents count)
     expect(screen.getByRole('heading', { level: 4, name: 'Tatooine' })).toBeInTheDocument();
     expect(screen.getByText('desert')).toBeInTheDocument();
     expect(screen.getAllByText(/200,000/).length).toBeGreaterThan(0);
+    expect(screen.getByText('10 characters')).toBeInTheDocument();
   });
 
   it('handles characters with "unknown" height and mass gracefully', () => {

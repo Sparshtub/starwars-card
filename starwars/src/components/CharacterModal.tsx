@@ -220,7 +220,9 @@ export const CharacterModal: React.FC<CharacterModalProps> = ({
                     </div>
                     <div>
                       <span className="text-[10px] text-slate-500 block uppercase">Residents</span>
-                      <span className="font-semibold">{formatPopulation(planet.population)}</span>
+                      <span className="font-semibold">
+                        {Array.isArray(planet.residents) ? `${planet.residents.length} character${planet.residents.length === 1 ? '' : 's'}` : 'Unknown'}
+                      </span>
                     </div>
                   </div>
                 </div>
