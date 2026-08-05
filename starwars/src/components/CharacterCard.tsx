@@ -34,7 +34,7 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
   const theme = getSpeciesTheme(speciesName);
 
   const handleImageError = () => {
-    const fallbackUrl = getPicsumImageUrl(person.name, id, globalRefreshKey + localRefreshKey);
+    const fallbackUrl = getPicsumImageUrl(person.name, id, globalRefreshKey + localRefreshKey, person.image);
     if (imageSrc !== fallbackUrl) {
       setImageSrc(fallbackUrl);
     }
@@ -44,7 +44,7 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
     e.stopPropagation();
     const nextKey = localRefreshKey + 1;
     setLocalRefreshKey(nextKey);
-    setImageSrc(getPicsumImageUrl(person.name, id, globalRefreshKey + nextKey));
+    setImageSrc(getPicsumImageUrl(person.name, id, globalRefreshKey + nextKey, person.image));
   };
 
   return (

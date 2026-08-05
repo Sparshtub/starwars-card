@@ -75,7 +75,7 @@ export const SearchAndFilter: React.FC<SearchAndFilterProps> = ({
               }`}
             >
               <Sparkles className="w-3.5 h-3.5" />
-              <span>Picsum Random</span>
+              <span>Alternate Pics</span>
             </button>
             <button
               onClick={() => onImageModeChange('official')}

@@ -52,7 +52,7 @@ export const CharacterModal: React.FC<CharacterModalProps> = ({
   const theme = getSpeciesTheme(speciesName);
 
   const handleImageError = () => {
-    const fallbackUrl = getPicsumImageUrl(person.name, id, refreshKey);
+    const fallbackUrl = getPicsumImageUrl(person.name, id, refreshKey, person.image);
     if (imageSrc !== fallbackUrl) {
       setImageSrc(fallbackUrl);
     }
