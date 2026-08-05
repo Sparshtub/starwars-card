@@ -20,8 +20,8 @@ export default function App() {
   const [selectedFilm, setSelectedFilm] = useState<string>('');
   const [selectedPerson, setSelectedPerson] = useState<Person | null>(null);
 
-  // Default image mode is 'picsum' using seeded Picsum photos per assignment requirements
-  const [imageMode, setImageMode] = useState<ImageMode>('picsum');
+  // Default image mode is 'official' (Visual Guide character portraits) for best initial visual impression; Picsum is available via UI toggle
+  const [imageMode, setImageMode] = useState<ImageMode>('official');
   const [globalRefreshKey, setGlobalRefreshKey] = useState<number>(0);
 
   const {

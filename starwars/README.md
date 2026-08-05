@@ -17,8 +17,8 @@ A production-grade, responsive Star Wars character exploration application built
 * **Pagination System**: Previous, Next, direct page buttons, total record count, and auto scroll-to-top.
 * **Species-Based Dynamic Themes**: Dynamic visual theme & badge for each species (*Human*, *Droid*, *Wookiee*, *Rodian*, *Zabrak*, *Hutt*, *Yoda's species*, etc.) with hover micro-animations.
 * **Smart Character Image Engine & Modes**:
-  * **Default (Picsum Photos)**: Default image source is Picsum per the spec (`https://picsum.photos/seed/{id}/400/500`) generating unique, deterministic photos per character SWAPI ID; clicking "Refresh Pics" rotates the seed for fresh random photos.
-  * **Visual Guide Mode (Toggle)**: Toggle to "Visual Guide" for character-accurate high-definition Star Wars portraits (`https://starwars-visualguide.com/assets/img/characters/{id}.jpg`) with Akabab fallbacks.
+  * **Default (Official Character Portraits)**: High-definition character-accurate Star Wars portraits (`https://starwars-visualguide.com/assets/img/characters/{id}.jpg`) for optimal visual presentation.
+  * **Picsum Photos Mode (Toggle)**: Toggle to "Picsum Photos" for the spec's random seeded stock photography mode (`https://picsum.photos/seed/{id}/400/500`); clicking "Refresh" rotates the seed for fresh random photos.
 * **Detailed Character Dossier Modal**: Accessible modal displaying:
   * Height in meters (`1.72 m`)
   * Mass in kg (`77 kg`)

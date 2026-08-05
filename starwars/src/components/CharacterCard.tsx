@@ -73,7 +73,9 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
           loading="lazy"
           className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500 ease-out"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent opacity-90 group-hover:opacity-75 transition-opacity" />
+        {/* Top & Bottom Gradient Scrim Overlays for Maximum Contrast */}
+        <div className="absolute inset-x-0 top-0 h-16 bg-gradient-to-b from-slate-950/80 via-slate-950/30 to-transparent pointer-events-none z-0" />
+        <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent opacity-90 group-hover:opacity-75 transition-opacity pointer-events-none" />
 
         {/* Species Badge */}
         <div className="absolute top-2 left-2 sm:top-3 sm:left-3 z-10">

@@ -1,6 +1,7 @@
 import React from 'react';
 import type { Planet, Film } from '../types/starwars';
 import type { ImageMode } from '../services/characterImages';
+import { CustomSelect } from './CustomSelect';
 import { Search, Filter, X, Globe, Dna, Clapperboard, RefreshCw, Image, Sparkles } from 'lucide-react';
 
 interface SearchAndFilterProps {
@@ -76,7 +77,7 @@ export const SearchAndFilter: React.FC<SearchAndFilterProps> = ({
   const activeDropdownCount = [selectedHomeworld, selectedSpecies, selectedFilm].filter(Boolean).length;
 
   return (
-    <div className="bg-slate-900/90 border border-slate-800 rounded-2xl p-3.5 sm:p-5 shadow-lg backdrop-blur-sm space-y-3.5 sm:space-y-4 mb-4 sm:mb-8">
+    <div className="bg-slate-900/90 border border-slate-800 rounded-2xl p-3.5 sm:p-5 shadow-lg backdrop-blur-sm space-y-3.5 sm:space-y-4 mb-4 sm:mb-8 relative z-20">
       
       {/* 1. Primary Dedicated Search Form (Always Visible on Mobile & Desktop) */}
       <form onSubmit={handleSearchSubmit} className="flex items-center space-x-2">
@@ -193,55 +194,52 @@ export const SearchAndFilter: React.FC<SearchAndFilterProps> = ({
       {/* 3. Filter Dropdowns Grid */}
       <div className={`grid grid-cols-1 sm:grid-cols-3 gap-2.5 sm:gap-4 ${showMobileFilters ? 'block space-y-2 sm:space-y-0' : 'hidden sm:grid'}`}>
         {/* Homeworld Filter Dropdown */}
-        <div className="relative">
-          <select
-            value={selectedHomeworld}
-            onChange={(e) => onHomeworldChange(e.target.value)}
-            className="w-full pl-9 pr-4 py-2 sm:py-2.5 bg-slate-950/80 border border-slate-800 rounded-xl text-xs sm:text-sm text-slate-200 focus:outline-none focus:border-amber-500/60 focus:ring-1 focus:ring-amber-500/60 transition-all appearance-none cursor-pointer"
-          >
-            <option value="">All Homeworlds</option>
-            {allPlanets.map((planet) => (
-              <option key={planet.url} value={planet.url}>
-                {planet.name}
-              </option>
-            ))}
-          </select>
-          <Globe className="w-4 h-4 text-slate-500 absolute left-3 top-2.5 sm:top-3 pointer-events-none" />
-        </div>
+        <CustomSelect
+          value={selectedHomeworld}
+          onChange={onHomeworldChange}
+          options={[
+            { value: '', label: 'All Homeworlds' },
+            ...allPlanets.map((planet) => ({
+              value: planet.url,
+              label: planet.name,
+            })),
+          ]}
+          placeholder="All Homeworlds"
+          icon={<Globe className="w-4 h-4" />}
+          searchable={true}
+        />
 
         {/* Species Filter Dropdown */}
-        <div className="relative">
-          <select
-            value={selectedSpecies}
-            onChange={(e) => onSpeciesChange(e.target.value)}
-            className="w-full pl-9 pr-4 py-2 sm:py-2.5 bg-slate-950/80 border border-slate-800 rounded-xl text-xs sm:text-sm text-slate-200 focus:outline-none focus:border-amber-500/60 focus:ring-1 focus:ring-amber-500/60 transition-all appearance-none cursor-pointer"
-          >
-            <option value="">All Species</option>
-            {SPECIES_OPTIONS.map((species) => (
-              <option key={species} value={species}>
-                {species}
-              </option>
-            ))}
-          </select>
-          <Dna className="w-4 h-4 text-slate-500 absolute left-3 top-2.5 sm:top-3 pointer-events-none" />
-        </div>
+        <CustomSelect
+          value={selectedSpecies}
+          onChange={onSpeciesChange}
+          options={[
+            { value: '', label: 'All Species' },
+            ...SPECIES_OPTIONS.map((species) => ({
+              value: species,
+              label: species,
+            })),
+          ]}
+          placeholder="All Species"
+          icon={<Dna className="w-4 h-4" />}
+          searchable={true}
+        />
 
         {/* Film Filter Dropdown */}
-        <div className="relative">
-          <select
-            value={selectedFilm}
-            onChange={(e) => onFilmChange(e.target.value)}
-            className="w-full pl-9 pr-4 py-2 sm:py-2.5 bg-slate-950/80 border border-slate-800 rounded-xl text-xs sm:text-sm text-slate-200 focus:outline-none focus:border-amber-500/60 focus:ring-1 focus:ring-amber-500/60 transition-all appearance-none cursor-pointer"
-          >
-            <option value="">All Films</option>
-            {allFilms.map((film) => (
-              <option key={film.url} value={film.url}>
-                {film.title} (Ep {film.episode_id})
-              </option>
-            ))}
-          </select>
-          <Clapperboard className="w-4 h-4 text-slate-500 absolute left-3 top-2.5 sm:top-3 pointer-events-none" />
-        </div>
+        <CustomSelect
+          value={selectedFilm}
+          onChange={onFilmChange}
+          options={[
+            { value: '', label: 'All Films' },
+            ...allFilms.map((film) => ({
+              value: film.url,
+              label: `${film.title} (Ep ${film.episode_id})`,
+            })),
+          ]}
+          placeholder="All Films"
+          icon={<Clapperboard className="w-4 h-4" />}
+          searchable={false}
+        />
       </div>
     </div>
   );

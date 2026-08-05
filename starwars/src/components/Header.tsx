@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { LoginModal } from './LoginModal';
-import { Shield, LogIn, LogOut, RefreshCw, Key, Sparkles } from 'lucide-react';
+import { Shield, LogIn, LogOut, RefreshCw, Key } from 'lucide-react';
 
 export const Header: React.FC = () => {
   const { isAuthenticated, user, logout, isRefreshing, triggerManualRefresh, refreshCount } = useAuth();
@@ -14,8 +14,8 @@ export const Header: React.FC = () => {
           
           {/* Galactic Brand Header */}
           <div className="flex items-center space-x-2.5 sm:space-x-3">
-            <div className="relative flex items-center justify-center w-9 h-9 sm:w-11 sm:h-11 rounded-xl bg-gradient-to-br from-amber-500/20 to-yellow-600/10 border border-amber-500/30 shadow-[0_0_15px_rgba(245,158,11,0.2)]">
-              <Sparkles className="w-5 h-5 sm:w-6 sm:h-6 text-amber-400 animate-pulse" />
+            <div className="relative flex items-center justify-center w-9 h-9 sm:w-11 sm:h-11 rounded-xl bg-slate-900 border border-amber-500/40 shadow-[0_0_20px_rgba(245,158,11,0.3)] overflow-hidden p-0.5 group cursor-pointer transition-transform hover:scale-105">
+              <img src="/favicon.svg" alt="Star Wars Crest Logo" className="w-full h-full object-contain" />
             </div>
             <div>
               <div className="flex items-center space-x-1.5 sm:space-x-2">

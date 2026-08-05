@@ -32,7 +32,7 @@ export function getRandomPicsumUrl(
 export function resolveCharacterImageUrl(
   personOrName: Person | string,
   id: string,
-  mode: ImageMode = 'picsum',
+  mode: ImageMode = 'official',
   refreshKey: number = 0
 ): string {
   const name = typeof personOrName === 'string' ? personOrName : personOrName.name;
