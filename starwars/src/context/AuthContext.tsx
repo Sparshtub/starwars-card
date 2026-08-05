@@ -57,14 +57,14 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   }, [authState.isAuthenticated, authState.expiresAt, performSilentRefresh]);
 
   const login = async (username: string, password: string): Promise<boolean> => {
-    // Validate mock credentials
-    if (!username.trim() || !password.trim()) {
+    // Validate mock credentials against fixed test credentials
+    if (username.trim().toLowerCase() !== 'jedi_master' || password.trim() !== 'force2026') {
       return false;
     }
 
     const user: User = {
       username: username.trim(),
-      role: 'Jedi Knight',
+      role: 'Jedi Master',
       avatar: `https://api.dicebear.com/7.x/bottts/svg?seed=${username.trim()}`,
     };
 
