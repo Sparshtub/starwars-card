@@ -10,6 +10,18 @@ A production-grade, responsive Star Wars character exploration application built
 
 ---
 
+## 📸 Application Screenshots & Visual Tour
+
+| **Desktop Personnel Grid & Multi-Filter System** |
+| :---: |
+| ![Desktop Overview](public/docs/images/desktop-preview.png) |
+
+| **Character Dossier Modal & Homeworld Intelligence** | **JWT Authentication & Silent Refresh Inspector** |
+| :---: | :---: |
+| ![Luke Dossier Modal](public/docs/images/character-modal.png) | ![JWT Auth Inspector](public/docs/images/jwt-auth-modal.png) |
+
+---
+
 ## 🌟 Features Implemented
 
 ### 🔎 Core Requirements
