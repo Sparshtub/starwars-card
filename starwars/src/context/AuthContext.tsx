@@ -14,6 +14,9 @@ interface AuthContextType extends AuthState {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+export const DEMO_USERNAME = 'jedi_master';
+export const DEMO_PASSWORD = 'force2026';
+
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [authState, setAuthState] = useState<AuthState>(() => getStoredAuth());
   const [refreshCount, setRefreshCount] = useState<number>(0);
@@ -57,8 +60,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   }, [authState.isAuthenticated, authState.expiresAt, performSilentRefresh]);
 
   const login = async (username: string, password: string): Promise<boolean> => {
-    // Validate mock credentials against fixed test credentials
-    if (username.trim().toLowerCase() !== 'jedi_master' || password.trim() !== 'force2026') {
+    // Strict credential validation against demo credentials (jedi_master / force2026)
+    if (username.trim().toLowerCase() !== DEMO_USERNAME || password.trim() !== DEMO_PASSWORD) {
       return false;
     }
 
