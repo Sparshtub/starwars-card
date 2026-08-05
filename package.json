@@ -4,7 +4,8 @@
   "scripts": {
     "dev": "npm --prefix starwars run dev",
     "build": "npm --prefix starwars run build",
-    "test": "npm --prefix starwars run test:run"
+    "test": "npm --prefix starwars run test",
+    "test:run": "npm --prefix starwars run test:run"
   },
   "dependencies": {
     "@tanstack/react-query": "^5.101.4",

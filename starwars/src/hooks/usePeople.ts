@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import type { Person, Planet, Film } from '../types/starwars';
 import { fetchPeople, fetchSpecies, fetchAllPlanets, fetchAllFilms } from '../services/swapi';
 import { extractIdFromUrl } from '../utils/formatters';
@@ -51,28 +51,37 @@ export function usePeople({
     setError(null);
 
     try {
-      const data = await fetchPeople(page, searchQuery);
+      const data = await fetchPeople({
+        page,
+        searchQuery,
+        selectedHomeworld,
+        selectedSpecies,
+        selectedFilm,
+      });
       setPeople(data.results);
       setTotalCount(data.count);
 
-      // Asynchronously fetch species names for characters on current page
-      const newSpeciesMap: Record<string, string> = {};
-      const speciesPromises = data.results.map(async (person) => {
-        const charId = extractIdFromUrl(person.url);
-        if (person.species && person.species.length > 0) {
-          try {
-            const speciesData = await fetchSpecies(person.species[0]);
-            newSpeciesMap[charId] = speciesData.name;
-          } catch {
-            newSpeciesMap[charId] = 'Human / Unspecified';
+      if (data.speciesMap) {
+        setSpeciesMap((prev) => ({ ...prev, ...data.speciesMap }));
+      } else {
+        // Fallback: Asynchronously fetch species names for characters on current page if not returned
+        const newSpeciesMap: Record<string, string> = {};
+        const speciesPromises = data.results.map(async (person) => {
+          const charId = extractIdFromUrl(person.url);
+          if (person.species && person.species.length > 0) {
+            try {
+              const speciesData = await fetchSpecies(person.species[0]);
+              newSpeciesMap[charId] = speciesData.name;
+            } catch {
+              newSpeciesMap[charId] = 'Human / Unspecified';
+            }
+          } else {
+            newSpeciesMap[charId] = 'Human';
           }
-        } else {
-          newSpeciesMap[charId] = 'Human';
-        }
-      });
-
-      await Promise.all(speciesPromises);
-      setSpeciesMap((prev) => ({ ...prev, ...newSpeciesMap }));
+        });
+        await Promise.all(speciesPromises);
+        setSpeciesMap((prev) => ({ ...prev, ...newSpeciesMap }));
+      }
     } catch (err: unknown) {
       const errorMessage = err instanceof Error 
         ? err.message 
@@ -81,50 +90,16 @@ export function usePeople({
     } finally {
       setLoading(false);
     }
-  }, [page, searchQuery]);
+  }, [page, searchQuery, selectedHomeworld, selectedSpecies, selectedFilm]);
 
   useEffect(() => {
     loadPeople();
   }, [loadPeople]);
 
-  // Client-side combined filtration for homeworld, species, and film
-  const filteredPeople = useMemo(() => {
-    return people.filter((person) => {
-      // Homeworld filter
-      if (selectedHomeworld) {
-        const targetId = extractIdFromUrl(selectedHomeworld);
-        const personHomeworldId = extractIdFromUrl(person.homeworld);
-        if (personHomeworldId !== targetId) return false;
-      }
-
-      // Species filter
-      if (selectedSpecies) {
-        const charId = extractIdFromUrl(person.url);
-        const speciesName = speciesMap[charId] || 'Human';
-        if (selectedSpecies.toLowerCase() === 'human') {
-          if (speciesName.toLowerCase() !== 'human' && speciesName.toLowerCase() !== 'human / unspecified') {
-            return false;
-          }
-        } else if (!speciesName.toLowerCase().includes(selectedSpecies.toLowerCase())) {
-          return false;
-        }
-      }
-
-      // Film filter
-      if (selectedFilm) {
-        const targetFilmId = extractIdFromUrl(selectedFilm);
-        const personFilmIds = person.films.map(extractIdFromUrl);
-        if (!personFilmIds.includes(targetFilmId)) return false;
-      }
-
-      return true;
-    });
-  }, [people, selectedHomeworld, selectedSpecies, selectedFilm, speciesMap]);
-
   const totalPages = Math.ceil(totalCount / 10) || 1;
 
   return {
-    people: filteredPeople,
+    people,
     rawPeopleCount: people.length,
     totalCount,
     totalPages,

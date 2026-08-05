@@ -83,4 +83,36 @@ describe('CharacterModal Integration Test', () => {
     expect(screen.getByText('desert')).toBeInTheDocument();
     expect(screen.getAllByText(/200,000/).length).toBeGreaterThan(0);
   });
+
+  it('handles characters with "unknown" height and mass gracefully', () => {
+    const mockUnknownChar: Person = {
+      ...mockLukeSkywalker,
+      name: 'R2-D2',
+      height: 'unknown',
+      mass: 'unknown',
+    };
+
+    render(
+      <CharacterModal
+        person={mockUnknownChar}
+        speciesName="Droid"
+        onClose={handleClose}
+      />
+    );
+
+    expect(screen.getByRole('heading', { level: 2, name: 'R2-D2' })).toBeInTheDocument();
+    expect(screen.getAllByText('Unknown').length).toBeGreaterThanOrEqual(2);
+  });
+
+  it('renders nothing when person prop is null', () => {
+    const { container } = render(
+      <CharacterModal
+        person={null}
+        speciesName="Human"
+        onClose={handleClose}
+      />
+    );
+
+    expect(container.firstChild).toBeNull();
+  });
 });

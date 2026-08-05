@@ -47,6 +47,21 @@ export default function App() {
     setCurrentPage(1);
   };
 
+  const handleHomeworldChange = (homeworld: string) => {
+    setSelectedHomeworld(homeworld);
+    setCurrentPage(1);
+  };
+
+  const handleSpeciesChange = (species: string) => {
+    setSelectedSpecies(species);
+    setCurrentPage(1);
+  };
+
+  const handleFilmChange = (film: string) => {
+    setSelectedFilm(film);
+    setCurrentPage(1);
+  };
+
   const handleClearFilters = () => {
     setSearchQuery('');
     setSelectedHomeworld('');
@@ -86,7 +101,7 @@ export default function App() {
         <div className="mb-8 space-y-2 text-left">
           <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs font-mono">
             <Sparkles className="w-3.5 h-3.5" />
-            <span>GALACTIC DIRECTORY • AKABAB STAR WARS API INTEGRATION</span>
+            <span>GALACTIC DIRECTORY • STAR WARS API INTEGRATION</span>
           </div>
           <h2 className="text-2xl sm:text-4xl font-extrabold font-mono tracking-tight text-slate-100">
             Galactic Personnel Archives
@@ -101,11 +116,11 @@ export default function App() {
           searchQuery={searchQuery}
           onSearchChange={handleSearchChange}
           selectedHomeworld={selectedHomeworld}
-          onHomeworldChange={setSelectedHomeworld}
+          onHomeworldChange={handleHomeworldChange}
           selectedSpecies={selectedSpecies}
-          onSpeciesChange={setSelectedSpecies}
+          onSpeciesChange={handleSpeciesChange}
           selectedFilm={selectedFilm}
-          onFilmChange={setSelectedFilm}
+          onFilmChange={handleFilmChange}
           allPlanets={allPlanets}
           allFilms={allFilms}
           onClearFilters={handleClearFilters}

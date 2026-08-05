@@ -22,16 +22,16 @@ A production-grade, responsive Star Wars character exploration application built
 * **Detailed Character Dossier Modal**: Accessible modal displaying:
   * Height in meters (`1.72 m`)
   * Mass in kg (`77 kg`)
-  * Created date formatted as **`dd-MM-yyyy`** (`09-12-2014`)
+  * Created date formatted as **`dd-MM-yyyy`** (`09-12-2014`) using UTC date methods
   * Number of film appearances (`4 films`)
   * Birth year & gender
   * **Homeworld Intelligence**: Asynchronously fetches homeworld details showing **Name**, **Population** (with commas), **Terrain**, **Climate**, and **Residents**.
 * **Loader & Error Handling**: Pulse skeleton loaders during network requests, plus error alerts with a **Retry** button.
 
 ### 🏆 Bonus Features ("Brownie Points")
-* 🔍 **Search & Multi-Filter Bar**: Real-time search and multi-select filtering for **Homeworld**, **Species**, and **Films**.
+* 🔍 **Search & Combined Multi-Filter Bar**: Real-time search and multi-select filtering for **Homeworld**, **Species**, and **Films**, pre-filtering across the entire dataset before calculating pagination.
 * 🔐 **JWT Authentication & Silent Refresh**: Login/logout UI with prefilled demo credentials (`jedi_master` / `force2026`) and automatic 30s pre-expiration silent token renewal.
-* 🧪 **Vitest Integration Tests**: Comprehensive test suite (`src/tests/CharacterModal.test.tsx`) testing modal opening, `meters`, `kg`, `dd-MM-yyyy` date formatting, and homeworld integration.
+* 🧪 **Vitest Test Suite**: Comprehensive integration and unit tests (`CharacterModal.test.tsx`, `formatters.test.ts`) testing modal opening, `meters`, `kg`, UTC `dd-MM-yyyy` date formatting, and homeworld integration.
 
 ---
 
@@ -55,7 +55,7 @@ npm install
 npm run dev
 
 # Run Vitest tests once
-npx vitest run
+npm run test:run
 
 # Run Vitest test runner in watch mode
 npm run test

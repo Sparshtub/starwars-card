@@ -80,18 +80,66 @@ async function fetchSwapiResource<T>(path: string): Promise<T> {
   }
 }
 
+export interface FetchPeopleOptions {
+  page?: number;
+  searchQuery?: string;
+  selectedHomeworld?: string;
+  selectedSpecies?: string;
+  selectedFilm?: string;
+}
+
+let speciesNameMapCache: Record<string, string> | null = null;
+
+export async function fetchAllSpeciesMap(): Promise<Record<string, string>> {
+  if (speciesNameMapCache) return speciesNameMapCache;
+  const speciesMap: Record<string, string> = {};
+  try {
+    const data = await fetchSwapiResource<Species[] | PaginatedResponse<Species>>('/species');
+    const speciesList = Array.isArray(data) ? data : data.results || [];
+    speciesList.forEach((spec) => {
+      const idMatch = spec.url ? spec.url.match(/\/(\d+)\/?$/) : null;
+      const id = idMatch ? idMatch[1] : '';
+      if (id) speciesMap[id] = spec.name;
+      if (spec.url) speciesMap[spec.url] = spec.name;
+    });
+  } catch (err) {
+    console.warn('Failed to pre-fetch species map:', err);
+  }
+  speciesNameMapCache = speciesMap;
+  return speciesMap;
+}
+
 export async function fetchPeople(
-  page: number = 1,
-  searchQuery: string = ''
-): Promise<PaginatedResponse<Person>> {
-  // Pre-load Akabab images in parallel
-  const imageMapPromise = loadAkababDatabase();
+  optionsOrPage: number | FetchPeopleOptions = 1,
+  searchQueryParam: string = ''
+): Promise<PaginatedResponse<Person> & { speciesMap?: Record<string, string> }> {
+  let page = 1;
+  let searchQuery = '';
+  let selectedHomeworld = '';
+  let selectedSpecies = '';
+  let selectedFilm = '';
+
+  if (typeof optionsOrPage === 'object' && optionsOrPage !== null) {
+    page = optionsOrPage.page || 1;
+    searchQuery = optionsOrPage.searchQuery || '';
+    selectedHomeworld = optionsOrPage.selectedHomeworld || '';
+    selectedSpecies = optionsOrPage.selectedSpecies || '';
+    selectedFilm = optionsOrPage.selectedFilm || '';
+  } else {
+    page = optionsOrPage;
+    searchQuery = searchQueryParam;
+  }
+
+  // Pre-load Akabab images & Species Map in parallel
+  const [imageMap, speciesNameMap] = await Promise.all([
+    loadAkababDatabase(),
+    fetchAllSpeciesMap(),
+  ]);
 
   try {
     if (!allPeopleCache) {
       const data = await fetchFromUrl<Person[] | PaginatedResponse<Person>>(`${SWAPI_INFO_BASE}/people`);
       const rawList = Array.isArray(data) ? data : data.results || [];
-      const imageMap = await imageMapPromise;
 
       allPeopleCache = rawList.map((person) => {
         const idMatch = person.url ? person.url.match(/\/(\d+)\/?$/) : null;
@@ -107,12 +155,59 @@ export async function fetchPeople(
     }
 
     if (allPeopleCache) {
+      // Build species map for all characters in allPeopleCache
+      const charSpeciesMap: Record<string, string> = {};
+      allPeopleCache.forEach((person) => {
+        const charId = person.url ? (person.url.match(/\/(\d+)\/?$/)?.[1] || '') : '';
+        if (person.species && person.species.length > 0) {
+          const specUrlOrId = person.species[0];
+          const specId = specUrlOrId.match(/\/(\d+)\/?$/)?.[1] || specUrlOrId;
+          const resolvedName = speciesNameMap[specUrlOrId] || speciesNameMap[specId];
+          charSpeciesMap[charId] = resolvedName || 'Human / Unspecified';
+        } else {
+          charSpeciesMap[charId] = 'Human';
+        }
+      });
+
       let filtered = allPeopleCache;
+
+      // 1. Search Query filter
       if (searchQuery.trim()) {
         const query = searchQuery.trim().toLowerCase();
-        filtered = allPeopleCache.filter((person) =>
+        filtered = filtered.filter((person) =>
           person.name.toLowerCase().includes(query)
         );
+      }
+
+      // 2. Homeworld filter
+      if (selectedHomeworld) {
+        const targetId = selectedHomeworld.match(/\/(\d+)\/?$/)?.[1] || selectedHomeworld;
+        filtered = filtered.filter((person) => {
+          const personHomeworldId = person.homeworld ? (person.homeworld.match(/\/(\d+)\/?$/)?.[1] || '') : '';
+          return personHomeworldId === targetId;
+        });
+      }
+
+      // 3. Species filter
+      if (selectedSpecies) {
+        const targetSpecLower = selectedSpecies.toLowerCase();
+        filtered = filtered.filter((person) => {
+          const charId = person.url ? (person.url.match(/\/(\d+)\/?$/)?.[1] || '') : '';
+          const sName = charSpeciesMap[charId] || 'Human';
+          if (targetSpecLower === 'human') {
+            return sName.toLowerCase().includes('human');
+          }
+          return sName.toLowerCase().includes(targetSpecLower);
+        });
+      }
+
+      // 4. Film filter
+      if (selectedFilm) {
+        const targetFilmId = selectedFilm.match(/\/(\d+)\/?$/)?.[1] || selectedFilm;
+        filtered = filtered.filter((person) => {
+          const personFilmIds = person.films.map((f) => f.match(/\/(\d+)\/?$/)?.[1] || f);
+          return personFilmIds.includes(targetFilmId);
+        });
       }
 
       const count = filtered.length;
@@ -125,6 +220,7 @@ export async function fetchPeople(
         next: startIndex + pageSize < count ? `page=${page + 1}` : null,
         previous: page > 1 ? `page=${page - 1}` : null,
         results,
+        speciesMap: charSpeciesMap,
       };
     }
   } catch (err) {
@@ -137,7 +233,6 @@ export async function fetchPeople(
     endpoint = `/people/?search=${encodeURIComponent(searchQuery.trim())}`;
   }
   const fallbackData = await fetchSwapiResource<PaginatedResponse<Person> | Person[]>(endpoint);
-  const imageMap = await imageMapPromise;
 
   if (Array.isArray(fallbackData)) {
     const mapped = fallbackData.map((p) => {

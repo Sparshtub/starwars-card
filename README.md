@@ -24,22 +24,23 @@ A production-grade, responsive Star Wars character exploration application built
   * Birth Year (`19BBY`)
   * Height in meters (`1.72 m`)
   * Mass in kg (`77 kg`)
-  * Created date formatted as **`dd-MM-yyyy`** (`09-12-2014`)
+  * Created date formatted as **`dd-MM-yyyy`** (`09-12-2014`) using UTC date methods
   * Number of film appearances (`4 films`)
   * **Homeworld Intelligence**: Asynchronous loading of planet details (**Name**, **Population** with localized comma formatting, **Terrain**, **Climate**, and **Residents** count).
 * **Skeleton Loading & Error Resilience**: Pulse skeleton loaders during network operations, plus error cards with a **Re-establish Connection (Retry)** button.
 
 ### 🏆 Bonus Features ("Brownie Points")
-* 🔍 **Multi-Criteria Search & Filter Bar**:
+* 🔍 **Multi-Criteria Search & Combined Filter System**:
   * Real-time search by character name.
   * Multi-select dropdown filters for **Homeworld**, **Species**, and **Films**.
+  * Full dataset pre-filtering: combined search and filters are evaluated across all records before paginating, guaranteeing accurate `totalCount` and `totalPages`.
   * One-click filter reset button.
 * 🔐 **JWT Authentication & Silent Refresh**:
   * Full login/logout modal with prefilled demo credentials (`jedi_master` / `force2026`).
   * Active JWT payload inspector with countdown timer.
   * **Silent Refresh Mechanism**: Background timer automatically renews the JWT token 30 seconds prior to expiration seamlessly.
 * 🧪 **Automated Testing Suite**:
-  * Integration tests built with **Vitest**, **React Testing Library**, and **jsdom** (`starwars/src/tests/CharacterModal.test.tsx`) covering modal behavior, formatting rules (`meters`, `kg`, `dd-MM-yyyy`), and homeworld data rendering.
+  * Comprehensive tests built with **Vitest**, **React Testing Library**, and **jsdom** covering character modals, formatters (`meters`, `kg`, UTC `dd-MM-yyyy`), and edge cases.
 
 ---
 
