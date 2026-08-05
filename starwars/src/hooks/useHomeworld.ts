@@ -9,6 +9,7 @@ export function useHomeworld(homeworldUrl: string | null) {
 
   useEffect(() => {
     if (!homeworldUrl) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setPlanet(null);
       setLoading(false);
       return;

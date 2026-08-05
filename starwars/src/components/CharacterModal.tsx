@@ -23,18 +23,19 @@ export const CharacterModal: React.FC<CharacterModalProps> = ({
 }) => {
   const { planet, loading: planetLoading, error: planetError } = useHomeworld(person ? person.homeworld : null);
 
-  const [imageSrc, setImageSrc] = useState<string | undefined>(() => 
-    person ? getCharacterImageUrl(person, extractIdFromUrl(person.url), imageMode, refreshKey) : undefined
-  );
+  const [hasError, setHasError] = useState<boolean>(false);
+  const [prevKey, setPrevKey] = useState<string>(`${person?.url}-${imageMode}-${refreshKey}`);
 
-  useEffect(() => {
-    if (person) {
-      const id = extractIdFromUrl(person.url);
-      setImageSrc(getCharacterImageUrl(person, id, imageMode, refreshKey));
-    } else {
-      setImageSrc(undefined);
-    }
-  }, [person, imageMode, refreshKey]);
+  const currentKey = `${person?.url}-${imageMode}-${refreshKey}`;
+  if (currentKey !== prevKey) {
+    setPrevKey(currentKey);
+    setHasError(false);
+  }
+
+  const modalId = person ? extractIdFromUrl(person.url) : '1';
+  const primaryUrl = person ? getCharacterImageUrl(person, modalId, imageMode, refreshKey) : undefined;
+  const fallbackUrl = person ? getPicsumImageUrl(person.name, modalId, refreshKey) : undefined;
+  const imageSrc = hasError ? fallbackUrl : primaryUrl;
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -52,10 +53,7 @@ export const CharacterModal: React.FC<CharacterModalProps> = ({
   const theme = getSpeciesTheme(speciesName);
 
   const handleImageError = () => {
-    const fallbackUrl = getPicsumImageUrl(person.name, id, refreshKey, person.image);
-    if (imageSrc !== fallbackUrl) {
-      setImageSrc(fallbackUrl);
-    }
+    setHasError(true);
   };
 
   return (

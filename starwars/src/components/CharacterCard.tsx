@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import type { Person } from '../types/starwars';
 import type { ImageMode } from '../services/characterImages';
 import { extractIdFromUrl, getCharacterImageUrl, getPicsumImageUrl, formatHeight, formatMass } from '../utils/formatters';
@@ -22,29 +22,30 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
 }) => {
   const id = extractIdFromUrl(person.url);
   const [localRefreshKey, setLocalRefreshKey] = useState<number>(0);
+  const [hasError, setHasError] = useState<boolean>(false);
+  const [prevKey, setPrevKey] = useState<string>(`${person.url}-${imageMode}-${globalRefreshKey}`);
 
-  const [imageSrc, setImageSrc] = useState<string>(() =>
-    getCharacterImageUrl(person, id, imageMode, globalRefreshKey)
-  );
+  const currentKey = `${person.url}-${imageMode}-${globalRefreshKey}`;
+  if (currentKey !== prevKey) {
+    setPrevKey(currentKey);
+    setHasError(false);
+    setLocalRefreshKey(0);
+  }
 
-  useEffect(() => {
-    setImageSrc(getCharacterImageUrl(person, id, imageMode, globalRefreshKey + localRefreshKey));
-  }, [person, id, imageMode, globalRefreshKey, localRefreshKey]);
+  const primaryUrl = getCharacterImageUrl(person, id, imageMode, globalRefreshKey + localRefreshKey);
+  const fallbackUrl = getPicsumImageUrl(person.name, id, globalRefreshKey + localRefreshKey);
+  const imageSrc = hasError ? fallbackUrl : primaryUrl;
 
   const theme = getSpeciesTheme(speciesName);
 
   const handleImageError = () => {
-    const fallbackUrl = getPicsumImageUrl(person.name, id, globalRefreshKey + localRefreshKey, person.image);
-    if (imageSrc !== fallbackUrl) {
-      setImageSrc(fallbackUrl);
-    }
+    setHasError(true);
   };
 
   const handleRefreshPicture = (e: React.MouseEvent) => {
     e.stopPropagation();
-    const nextKey = localRefreshKey + 1;
-    setLocalRefreshKey(nextKey);
-    setImageSrc(getPicsumImageUrl(person.name, id, globalRefreshKey + nextKey, person.image));
+    setLocalRefreshKey((prev) => prev + 1);
+    setHasError(false);
   };
 
   return (

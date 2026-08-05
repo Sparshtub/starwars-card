@@ -20,8 +20,8 @@ export default function App() {
   const [selectedFilm, setSelectedFilm] = useState<string>('');
   const [selectedPerson, setSelectedPerson] = useState<Person | null>(null);
 
-  // Default image mode is 'official' utilizing Akabab Star Wars API high-definition photos
-  const [imageMode, setImageMode] = useState<ImageMode>('official');
+  // Default image mode is 'picsum' using seeded Picsum photos per assignment requirements
+  const [imageMode, setImageMode] = useState<ImageMode>('picsum');
   const [globalRefreshKey, setGlobalRefreshKey] = useState<number>(0);
 
   const {

@@ -77,10 +77,9 @@ export function getStarWarsVisualGuideUrl(id: string): string {
 export function getPicsumImageUrl(
   characterName: string,
   id: string,
-  refreshKey: number = 0,
-  attachedImage?: string
+  refreshKey: number = 0
 ): string {
-  return getRandomPicsumUrl(characterName, id, refreshKey, attachedImage);
+  return getRandomPicsumUrl(characterName, id, refreshKey);
 }
 
 export function getCharacterImageUrl(

@@ -9,7 +9,7 @@ const DEV_FALLBACK_BASE = 'https://swapi.dev/api';
 const planetCache = new Map<string, Planet>();
 const speciesCache = new Map<string, Species>();
 const filmCache = new Map<string, Film>();
-let akababImageMap = new Map<string, string>(); // name/id -> image URL
+const akababImageMap = new Map<string, string>(); // name/id -> image URL
 let allPeopleCache: Person[] | null = null;
 
 interface AkababCharacter {
@@ -64,7 +64,7 @@ async function loadAkababDatabase(): Promise<Map<string, string>> {
  */
 async function fetchSwapiResource<T>(path: string): Promise<T> {
   const cleanPath = path.startsWith('http')
-    ? path.replace(/^https?:\/\/[^\/]+\/api/, '')
+    ? path.replace(/^https?:\/\/[^/]+\/api/, '')
     : path.startsWith('/') ? path : `/${path}`;
 
   try {
@@ -119,15 +119,15 @@ export async function fetchPeople(
   let selectedSpecies = '';
   let selectedFilm = '';
 
-  if (typeof optionsOrPage === 'object' && optionsOrPage !== null) {
+  if (typeof optionsOrPage === 'number') {
+    page = optionsOrPage;
+    searchQuery = searchQueryParam;
+  } else if (optionsOrPage && typeof optionsOrPage === 'object') {
     page = optionsOrPage.page || 1;
     searchQuery = optionsOrPage.searchQuery || '';
     selectedHomeworld = optionsOrPage.selectedHomeworld || '';
     selectedSpecies = optionsOrPage.selectedSpecies || '';
     selectedFilm = optionsOrPage.selectedFilm || '';
-  } else {
-    page = optionsOrPage;
-    searchQuery = searchQueryParam;
   }
 
   // Pre-load Akabab images & Species Map in parallel

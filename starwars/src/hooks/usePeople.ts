@@ -93,6 +93,7 @@ export function usePeople({
   }, [page, searchQuery, selectedHomeworld, selectedSpecies, selectedFilm]);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     loadPeople();
   }, [loadPeople]);
 
