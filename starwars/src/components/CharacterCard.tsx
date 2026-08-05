@@ -76,50 +76,50 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
         <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent opacity-90 group-hover:opacity-75 transition-opacity" />
 
         {/* Species Badge */}
-        <div className="absolute top-3 left-3 z-10">
+        <div className="absolute top-2 left-2 sm:top-3 sm:left-3 z-10">
           <span
-            className={`inline-flex items-center px-2.5 py-1 rounded-xl text-[11px] font-bold font-mono tracking-wide backdrop-blur-md border ${theme.badgeBg} ${theme.badgeText} ${theme.badgeBorder} shadow-md`}
+            className={`inline-flex items-center px-1.5 sm:px-2.5 py-0.5 sm:py-1 rounded-lg sm:rounded-xl text-[9px] sm:text-[11px] font-bold font-mono tracking-wide backdrop-blur-md border ${theme.badgeBg} ${theme.badgeText} ${theme.badgeBorder} shadow-md truncate max-w-[90px] sm:max-w-none`}
           >
             {speciesName}
           </span>
         </div>
 
         {/* Top Right Actions: Film Count & Refresh Picture */}
-        <div className="absolute top-3 right-3 flex items-center space-x-1.5 z-10">
+        <div className="absolute top-2 right-2 sm:top-3 sm:right-3 flex items-center space-x-1 sm:space-x-1.5 z-10">
           <button
             onClick={handleRefreshPicture}
             title="Refresh random picture for this character"
-            className="p-1.5 rounded-xl bg-slate-950/80 hover:bg-slate-900 text-slate-400 hover:text-amber-400 border border-slate-800 backdrop-blur-md shadow-md transition-colors opacity-0 group-hover:opacity-100"
+            className="p-1 sm:p-1.5 rounded-lg sm:rounded-xl bg-slate-950/80 hover:bg-slate-900 text-slate-300 hover:text-amber-400 border border-slate-800 backdrop-blur-md shadow-md transition-colors opacity-100 sm:opacity-0 sm:group-hover:opacity-100"
           >
-            <RefreshCw className="w-3.5 h-3.5" />
+            <RefreshCw className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
           </button>
-          <span className="inline-flex items-center space-x-1 px-2.5 py-1 rounded-xl text-[11px] font-bold font-mono bg-slate-950/80 backdrop-blur-md border border-slate-800 text-slate-300 shadow-md">
-            <Film className="w-3 h-3 text-amber-400" />
+          <span className="inline-flex items-center space-x-1 px-1.5 sm:px-2.5 py-0.5 sm:py-1 rounded-lg sm:rounded-xl text-[9px] sm:text-[11px] font-bold font-mono bg-slate-950/80 backdrop-blur-md border border-slate-800 text-slate-300 shadow-md">
+            <Film className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-amber-400" />
             <span>{person.films.length}</span>
           </span>
         </div>
 
         {/* Character Title Overlaid on Gradient Bottom */}
-        <div className="absolute bottom-3 left-4 right-4 z-10">
+        <div className="absolute bottom-2 sm:bottom-3 left-2.5 sm:left-4 right-2.5 sm:right-4 z-10">
           <div className="flex items-center justify-between">
-            <h3 className="text-base font-bold font-mono text-white group-hover:text-amber-300 transition-colors line-clamp-1 drop-shadow-md">
+            <h3 className="text-xs sm:text-base font-bold font-mono text-white group-hover:text-amber-300 transition-colors line-clamp-1 drop-shadow-md">
               {person.name}
             </h3>
-            <ExternalLink className="w-3.5 h-3.5 text-slate-400 group-hover:text-amber-400 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all shrink-0 ml-1" />
+            <ExternalLink className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-slate-400 group-hover:text-amber-400 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all shrink-0 ml-1" />
           </div>
         </div>
       </div>
 
       {/* Quick Specs Footer Grid */}
-      <div className="p-3.5 bg-slate-950/60 border-t border-slate-800/80">
-        <div className="grid grid-cols-2 gap-2 text-[11px] font-mono text-slate-400">
-          <div className="flex items-center space-x-1.5">
-            <Ruler className="w-3.5 h-3.5 text-cyan-400" />
-            <span>{formatHeight(person.height)}</span>
+      <div className="p-2 sm:p-3.5 bg-slate-950/60 border-t border-slate-800/80">
+        <div className="grid grid-cols-2 gap-1 sm:gap-2 text-[10px] sm:text-[11px] font-mono text-slate-400">
+          <div className="flex items-center space-x-1 sm:space-x-1.5 truncate">
+            <Ruler className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-cyan-400 shrink-0" />
+            <span className="truncate">{formatHeight(person.height)}</span>
           </div>
-          <div className="flex items-center space-x-1.5">
-            <Weight className="w-3.5 h-3.5 text-amber-400" />
-            <span>{formatMass(person.mass)}</span>
+          <div className="flex items-center space-x-1 sm:space-x-1.5 truncate">
+            <Weight className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-amber-400 shrink-0" />
+            <span className="truncate">{formatMass(person.mass)}</span>
           </div>
         </div>
       </div>

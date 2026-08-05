@@ -79,7 +79,7 @@ export const CharacterModal: React.FC<CharacterModalProps> = ({
         </button>
 
         {/* Left Column: Character Full Portrait Frame */}
-        <div className="relative lg:w-5/12 bg-slate-950 flex flex-col justify-end overflow-hidden shrink-0 min-h-[300px] lg:min-h-[500px]">
+        <div className="relative lg:w-5/12 bg-slate-950 flex flex-col justify-end overflow-hidden shrink-0 min-h-[180px] sm:min-h-[300px] lg:min-h-[500px]">
           <img
             src={imageSrc || undefined}
             alt={person.name}
@@ -91,26 +91,26 @@ export const CharacterModal: React.FC<CharacterModalProps> = ({
           <div className="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-slate-950/60 hidden lg:block" />
 
           {/* Species Badge Overlay on Portrait */}
-          <div className="relative p-6 z-10 space-y-2">
-            <div className="flex flex-wrap items-center gap-2">
+          <div className="relative p-3 sm:p-6 z-10 space-y-1 sm:space-y-2">
+            <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
               <span
-                className={`inline-flex items-center px-3 py-1 rounded-xl text-xs font-bold font-mono tracking-wide backdrop-blur-md border ${theme.badgeBg} ${theme.badgeText} ${theme.badgeBorder} shadow-lg`}
+                className={`inline-flex items-center px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-lg sm:rounded-xl text-[10px] sm:text-xs font-bold font-mono tracking-wide backdrop-blur-md border ${theme.badgeBg} ${theme.badgeText} ${theme.badgeBorder} shadow-lg`}
               >
                 <Zap className="w-3 h-3 mr-1" />
                 {speciesName}
               </span>
-              <span className="inline-flex items-center px-3 py-1 rounded-xl text-xs font-mono font-medium bg-slate-950/80 text-slate-300 border border-slate-800 backdrop-blur-md">
+              <span className="inline-flex items-center px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-lg sm:rounded-xl text-[10px] sm:text-xs font-mono font-medium bg-slate-950/80 text-slate-300 border border-slate-800 backdrop-blur-md">
                 {`Birth Year: ${person.birth_year}`}
               </span>
             </div>
-            <p className="text-xs font-mono text-slate-400">
+            <p className="text-[10px] sm:text-xs font-mono text-slate-400">
               Subject ID: #{id.padStart(3, '0')} • Gender: {person.gender}
             </p>
           </div>
         </div>
 
         {/* Right Column: Information & Specs Panel */}
-        <div className="lg:w-7/12 p-6 sm:p-8 space-y-6 overflow-y-auto font-sans flex flex-col justify-between">
+        <div className="lg:w-7/12 p-4 sm:p-8 space-y-4 sm:space-y-6 overflow-y-auto font-sans flex flex-col justify-between">
           
           {/* Header Title Section */}
           <div className="space-y-2">

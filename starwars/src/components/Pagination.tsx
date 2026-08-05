@@ -33,7 +33,7 @@ export const Pagination: React.FC<PaginationProps> = ({
       </div>
 
       {/* Pagination Controls */}
-      <div className="flex items-center space-x-1.5">
+      <div className="flex flex-wrap items-center justify-center gap-1 sm:gap-1.5">
         <button
           onClick={() => onPageChange(currentPage - 1)}
           disabled={currentPage === 1 || disabled}

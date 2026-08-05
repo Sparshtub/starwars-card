@@ -95,18 +95,18 @@ export default function App() {
       <Header />
 
       {/* Main Page Layout Container */}
-      <main className="relative z-10 flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10">
+      <main className="relative z-10 flex-grow max-w-7xl w-full mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-10">
         
         {/* Banner Hero Section */}
-        <div className="mb-8 space-y-2 text-left">
-          <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs font-mono">
-            <Sparkles className="w-3.5 h-3.5" />
+        <div className="mb-4 sm:mb-8 space-y-1 sm:space-y-2 text-left">
+          <div className="inline-flex items-center space-x-1.5 sm:space-x-2 px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-300 text-[10px] sm:text-xs font-mono">
+            <Sparkles className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
             <span>GALACTIC DIRECTORY • STAR WARS API INTEGRATION</span>
           </div>
-          <h2 className="text-2xl sm:text-4xl font-extrabold font-mono tracking-tight text-slate-100">
+          <h2 className="text-xl sm:text-4xl font-extrabold font-mono tracking-tight text-slate-100">
             Galactic Personnel Archives
           </h2>
-          <p className="text-sm text-slate-400 max-w-2xl">
+          <p className="text-xs sm:text-sm text-slate-400 max-w-2xl hidden sm:block">
             Explore Star Wars characters with species-based visual signatures, biometric metrics, and real-time homeworld intelligence.
           </p>
         </div>
@@ -150,16 +150,16 @@ export default function App() {
           </div>
         ) : (
           <div>
-            <div className="flex items-center justify-between mb-4 px-1 text-xs font-mono text-slate-400">
+            <div className="flex items-center justify-between mb-3 px-1 text-[11px] sm:text-xs font-mono text-slate-400">
               <span className="flex items-center space-x-1.5">
                 <Database className="w-3.5 h-3.5 text-amber-400" />
                 <span>Showing {people.length} character records</span>
               </span>
-              <span>Click any card for homeworld specs</span>
+              <span className="hidden xs:inline">Click card for homeworld specs</span>
             </div>
 
-            {/* Character Cards Responsive Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-5">
+            {/* Character Cards Responsive Grid (2-Column on Mobile) */}
+            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2.5 sm:gap-4 md:gap-5">
               {people.map((person) => {
                 const id = extractIdFromUrl(person.url);
                 const speciesName = speciesMap[id] || 'Human';

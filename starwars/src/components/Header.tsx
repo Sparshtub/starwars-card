@@ -10,19 +10,19 @@ export const Header: React.FC = () => {
   return (
     <>
       <header className="sticky top-0 z-30 backdrop-blur-md bg-slate-950/80 border-b border-slate-800/80 shadow-lg">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between">
           
           {/* Galactic Brand Header */}
-          <div className="flex items-center space-x-3">
-            <div className="relative flex items-center justify-center w-11 h-11 rounded-xl bg-gradient-to-br from-amber-500/20 to-yellow-600/10 border border-amber-500/30 shadow-[0_0_15px_rgba(245,158,11,0.2)]">
-              <Sparkles className="w-6 h-6 text-amber-400 animate-pulse" />
+          <div className="flex items-center space-x-2.5 sm:space-x-3">
+            <div className="relative flex items-center justify-center w-9 h-9 sm:w-11 sm:h-11 rounded-xl bg-gradient-to-br from-amber-500/20 to-yellow-600/10 border border-amber-500/30 shadow-[0_0_15px_rgba(245,158,11,0.2)]">
+              <Sparkles className="w-5 h-5 sm:w-6 sm:h-6 text-amber-400 animate-pulse" />
             </div>
             <div>
-              <div className="flex items-center space-x-2">
-                <h1 className="text-xl sm:text-2xl font-bold tracking-wider font-mono text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-yellow-400 to-amber-500 uppercase">
+              <div className="flex items-center space-x-1.5 sm:space-x-2">
+                <h1 className="text-base sm:text-2xl font-bold tracking-wider font-mono text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-yellow-400 to-amber-500 uppercase">
                   STAR WARS
                 </h1>
-                <span className="px-2 py-0.5 text-[10px] font-semibold tracking-wider uppercase rounded bg-amber-500/10 border border-amber-500/30 text-amber-300">
+                <span className="hidden xs:inline-block px-2 py-0.5 text-[10px] font-semibold tracking-wider uppercase rounded bg-amber-500/10 border border-amber-500/30 text-amber-300">
                   ARCHIVES
                 </span>
               </div>
@@ -76,11 +76,11 @@ export const Header: React.FC = () => {
             ) : (
               <button
                 onClick={() => setIsLoginOpen(true)}
-                className="flex items-center space-x-2 px-4 py-2 text-sm font-semibold text-slate-900 bg-gradient-to-r from-amber-400 via-yellow-400 to-amber-500 hover:from-amber-300 hover:to-yellow-400 rounded-xl shadow-[0_0_20px_rgba(245,158,11,0.3)] transition-all transform hover:scale-[1.02] active:scale-[0.98]"
+                className="flex items-center space-x-1.5 sm:space-x-2 px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-semibold text-slate-900 bg-gradient-to-r from-amber-400 via-yellow-400 to-amber-500 hover:from-amber-300 hover:to-yellow-400 rounded-xl shadow-[0_0_20px_rgba(245,158,11,0.3)] transition-all transform hover:scale-[1.02] active:scale-[0.98]"
               >
-                <Shield className="w-4 h-4" />
+                <Shield className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                 <span>JWT Access</span>
-                <LogIn className="w-4 h-4 ml-1 opacity-70" />
+                <LogIn className="w-3.5 h-3.5 sm:w-4 sm:h-4 ml-0.5 sm:ml-1 opacity-70" />
               </button>
             )}
           </div>
